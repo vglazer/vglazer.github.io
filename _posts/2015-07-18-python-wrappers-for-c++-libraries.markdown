@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "Python Wrappers for C++ Libraries"
+date:   2015-07-18 17:05:19
+categories: programming python
+---
 #The Problem
 Say you've written a library in C++ and you want to call it from Python. You basically have three options:
 
@@ -18,8 +24,8 @@ Once you are done crafting the wrapper code you compile and link it the same as 
 ##Cython
 Cython is similar to SWIG in that it generates wrappers for you, but instead of a single *interface file* you have a `*.pxd` file and a `*.pyx` file which are both written in Cython (a kind of extended Python). The [examples](http://docs.cython.org/src/userguide/wrapping_CPlusPlus.html) I [found](http://blog.perrygeo.net/2008/04/19/a-quick-cython-introduction/) [online](https://github.com/cython/cython/wiki/WrappingSetOfCppClasses) tended to leave some details out, so I put together a complete, working example, found below. This assumes Anaconda is installed in `$ANACONDA_DIR` and that you `touch include/wrappers.hpp`.
 
-~~~ cpp
-include/Adder.hpp:
+`include/Adder.hpp`:
+{% highlight cpp %}
 
 #if !defined(__ADDER_HPP__)
 #define __ADDER_HPP__
@@ -36,10 +42,10 @@ class Adder
 };
 
 #endif // __ADDER_HPP__
-~~~
+{% endhighlight %}
 
-~~~cpp
-src/Adder.cpp:
+`src/Adder.cpp`:
+{% highlight cpp %}
 
 #include <Adder.hpp>
 
@@ -58,10 +64,10 @@ Adder::get_sum() const
 {
     return _sum;
 }
-~~~
+{% endhighlight %}
 
-~~~cpp
-include/Multiplier.hpp:
+`include/Multiplier.hpp`:
+{% highlight cpp %}
 
 #if !defined(__MULTIPLIER_HPP__)
 #define __MULTIPLIER_HPP__
@@ -78,10 +84,10 @@ class Multiplier
 };
 
 #endif // __MULTIPLIER_HPP__
-~~~
+{% endhighlight %}
 
-~~~cpp
-src/Multiplier.cpp:
+`src/Multiplier.cpp`:
+{% highlight cpp %}
 
 #include <Multiplier.hpp>
 
@@ -100,10 +106,10 @@ Multiplier::get_product() const
 {
     return _product;
 }
-~~~
+{% endhighlight %}
 
-~~~python
-wrappers.pxd:
+`wrappers.pxd`:
+{% highlight cython %}
 
 cdef extern from "Adder.hpp":
     cdef cppclass Adder:
@@ -116,10 +122,10 @@ cdef extern from "Multiplier.hpp":
         Multiplier()
         void mult(int n)
         int get_product() const
-~~~
+{% endhighlight %}
 
-~~~python
-wrappers.pyx:
+`wrappers.pyx`:
+{% highlight cython %}
 
 cimport wrappers
 
@@ -154,10 +160,10 @@ cdef class PyMultiplier:
     property product:
         def __get__(self):
             return self.thisptr.get_product()
-~~~
+{% endhighlight %}
 
-~~~
-Makefile:
+`Makefile`:
+{% highlight make %}
 
 CPP=g++
 CPPFLAGS=-Wall -ansi -pedantic -std=c++11 -fPIC -I./include -I$(ANACONDA_DIR)/include/python2.7
@@ -176,5 +182,4 @@ src/wrappers.cpp: wrappers.pyx
 
 clean:
     rm -f src/wrappers.cpp *.o *.so
-
-~~~
+{% endhighlight %}

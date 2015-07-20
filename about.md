@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-I have been programming professionally for about ten years, mostly in C++ on Linux.
+I have been programming professionally for over ten years, mostly in C++ on Linux.
