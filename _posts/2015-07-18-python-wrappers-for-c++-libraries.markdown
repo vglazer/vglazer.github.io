@@ -25,7 +25,7 @@ Once you are done crafting the wrapper code you compile and link it the same as 
 Cython is similar to SWIG in that it generates wrappers for you, but instead of a single *interface file* you have a `*.pxd` file and a `*.pyx` file which are both written in Cython (a kind of extended Python). The [examples](http://docs.cython.org/src/userguide/wrapping_CPlusPlus.html) I [found](http://blog.perrygeo.net/2008/04/19/a-quick-cython-introduction/) [online](https://github.com/cython/cython/wiki/WrappingSetOfCppClasses) tended to leave some details out, so I put together a complete, working example, found below. This assumes Anaconda is installed in `$ANACONDA_DIR` and that you `touch include/wrappers.hpp`.
 
 `include/Adder.hpp`:
-{% highlight cpp %}
+{% highlight cpp linenos %}
 
 #if !defined(__ADDER_HPP__)
 #define __ADDER_HPP__
@@ -45,7 +45,7 @@ class Adder
 {% endhighlight %}
 
 `src/Adder.cpp`:
-{% highlight cpp %}
+{% highlight cpp linenos %}
 
 #include <Adder.hpp>
 
@@ -67,7 +67,7 @@ Adder::get_sum() const
 {% endhighlight %}
 
 `include/Multiplier.hpp`:
-{% highlight cpp %}
+{% highlight cpp linenos %}
 
 #if !defined(__MULTIPLIER_HPP__)
 #define __MULTIPLIER_HPP__
@@ -87,7 +87,7 @@ class Multiplier
 {% endhighlight %}
 
 `src/Multiplier.cpp`:
-{% highlight cpp %}
+{% highlight cpp linenos %}
 
 #include <Multiplier.hpp>
 
@@ -109,7 +109,7 @@ Multiplier::get_product() const
 {% endhighlight %}
 
 `wrappers.pxd`:
-{% highlight cython %}
+{% highlight cython linenos %}
 
 cdef extern from "Adder.hpp":
     cdef cppclass Adder:
@@ -125,7 +125,7 @@ cdef extern from "Multiplier.hpp":
 {% endhighlight %}
 
 `wrappers.pyx`:
-{% highlight cython %}
+{% highlight cython linenos %}
 
 cimport wrappers
 
@@ -163,8 +163,7 @@ cdef class PyMultiplier:
 {% endhighlight %}
 
 `Makefile`:
-{% highlight make %}
-
+{% highlight make linenos %}
 CPP=g++
 CPPFLAGS=-Wall -ansi -pedantic -std=c++11 -fPIC -I./include -I$(ANACONDA_DIR)/include/python2.7
 LDFLAGS=-shared -L$(ANACONDA_DIR)/lib -lpython2.7
