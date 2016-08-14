@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-I have been programming professionally for about ten years, mostly in C++ on Linux.
+In anything at all, perfection is finally attained not when there is no longer anything to add, but when there is no longer anything to take away.
