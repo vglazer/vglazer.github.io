@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Python Wrappers for C++ Libraries"
+title:  "Who Killed Gawker?"
 date:   2016-08-20 10:06:00
 categories: media internet thiel
 ---
