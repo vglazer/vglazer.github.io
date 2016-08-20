@@ -11,5 +11,5 @@ github_username:  vglazer
 
 # Build settings
 markdown: kramdown
-highlighter: pygments
+highlighter: rouge
 gems: [jekyll-gist]
