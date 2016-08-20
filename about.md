@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-In anything at all, perfection is finally attained not when there is no longer anything to add, but when there is no longer anything to take away.
+Musings on culture, tech and finance in the age of snake people
