@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The Other Silicon Valley Bubble"
+title:  "Silicon Valley's Other Bubble"
 date:   2016-08-30 22:33:00
 categories: real_estate silicon_valley 
 ---
