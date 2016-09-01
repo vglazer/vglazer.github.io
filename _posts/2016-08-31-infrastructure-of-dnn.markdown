@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Open-source deep learning infrastructure"
+title:  "Infrastructure for Deep Learning"
 date:   2016-08-31 20:12:00
 categories: machine_learning infrastructure 
 ---
