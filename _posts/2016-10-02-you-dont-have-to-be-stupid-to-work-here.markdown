@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Stupefied"
+title:  "You don't have to be stupid to work here, but it helps"
 date:   2016-10-02 15:25:00
 categories: workplace stupidity
 ---
