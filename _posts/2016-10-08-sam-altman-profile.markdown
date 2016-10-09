@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Sam Altman's Manifest Destiny"
+title:  "I think his goal is to make the whole future"
 date:   2016-10-08 21:08:00
 categories: new\_yorker profiles
 ---
