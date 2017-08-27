@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-A programming blog
+Art, Finance, Music and Technology
