@@ -4,4 +4,5 @@ title: About
 permalink: /about/
 ---
 
-Art, Finance, Music and Technology
+I have been programming professionally for over a decade, 
+mostly in C++ on Linux.
