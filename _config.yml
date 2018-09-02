@@ -12,4 +12,4 @@ twitter_username: VictorGlazer
 # Build settings
 markdown: kramdown
 highlighter: rouge
-gems: [jekyll-gist]
+plugins: [jekyll-gist]
