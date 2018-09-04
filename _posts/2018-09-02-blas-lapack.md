@@ -4,6 +4,9 @@ title:  "BLAS and LAPACK"
 date:   2018-09-02 19:41:00
 categories: libraries mac osx numerical_analysis linear_algebra scientific_computing
 ---
+## Motivation
+I've been vaguely aware of BLAS and LAPACK forever, but lately I finally decided to take the
+time to read up on them properly. Below is a summary of my findings.
 
 ## Background
 [LAPACK](http://www.netlib.org/lapack/) is a standard library -- written in Fortran -- for 
@@ -103,9 +106,19 @@ uBLAS prioritizes portability over performance, like ATLAS, but is slower than A
 "abstraction penalty", and thus even slower than BLAS implementatinos tuned for particular
 architectures such as OpenBLAS, MTL or BLIS.
 
-## Which BLAS to Use
-Based on the above, I would suggest the following waterfall to maximize performance without
-sacrificing redistribution rights:
+## So Which BLAS should I Use?
+Based on my research so far, I would do the following:
+
 * If you are on a Mac, use vecLib
-* Otherwise, use OpenBLAS if you are on Intel or AMD
+* Otherwise, if you have an Intel CPU, use OpenBLAS or MTK
+* If you have an AMD CPU, use OpenBLAS or BLIS + libflame
 * For all other architectures such as ARM, use ATLAS
+* Avoid the reference BLAS implementation from Netlib
+* Avoid uBLAS
+
+These are just rules of thumb meant to maximize performance without sacrificing redistribution 
+rights. I suggested using vecLib on Macs mostly as a matter of convenience; I have no idea
+how it's performance compares to say OpenBLAS, but it would be interesting to check. Similarly,
+it's not clear to me whether MTK and BLIS outperform OpenBLAS on Intel and AMD, respectively,
+or whether OpenBLAS outperforms ATLAS on those architectures.
+
