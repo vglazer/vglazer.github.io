@@ -13,3 +13,5 @@ linkedin_username: victorglazer
 markdown: kramdown
 highlighter: rouge
 plugins: [jekyll-gist]
+
+theme: jekyll-theme-tactile
