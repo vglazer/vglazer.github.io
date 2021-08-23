@@ -1,14 +1,27 @@
 ---
 layout: post
-title:  "BLAS and LAPACK"
+title:  "Which BLAS and LAPACK should I use?"
 date:   2018-09-02 19:41:00
+permalink: which-blas-and-lapack-to-use
 categories: libraries mac osx numerical_analysis linear_algebra scientific_computing
 ---
+
+## TL;DR
+
+* If you are on a Mac, use vecLib
+* Otherwise, if you have an Intel CPU, use OpenBLAS or MTK
+* If you have an AMD CPU, use OpenBLAS or BLIS + libflame
+* For all other architectures such as ARM, use ATLAS
+* Avoid the reference BLAS implementation from Netlib
+* Avoid uBLAS
+
 ## Motivation
+
 I've been vaguely aware of BLAS and LAPACK forever, but lately I finally decided to take the
 time to read up on them properly. Below is a summary of my findings.
 
 ## Background
+
 [LAPACK](http://www.netlib.org/lapack/) is a standard library -- written in Fortran -- for 
 common linear algebra tasks such as solving systems of linear equations and 
 least squares problems, finding eigenvalues and singular values, as well as factorizing 
@@ -53,6 +66,7 @@ For the historically minded, the following ["oral history"](http://history.siam.
 of BLAS may prove of some inteterest.
 
 ## Select Vendor Implementations
+
 * A highly-tuned [BLAS](https://software.intel.com/en-us/mkl-developer-reference-c-blas-and-sparse-blas-routines) 
 implementation is included with Intel's [MKL](https://software.intel.com/en-us/mkl), 
 which also provides optimized implementations of various [LAPACK routines](https://software.intel.com/en-us/mkl-developer-reference-c-lapack-routines). 
@@ -81,6 +95,7 @@ for their supercomputers as part of [CMSL / LibSci](https://pubs.cray.com/conten
 You can read more about LibSci [here](http://www.nersc.gov/users/software/programming-libraries/math-libraries/libsci/). 
 
 ## Other BLAS Implementations
+
 * [ATLAS](http://math-atlas.sourceforge.net/) is a portable (i.e. architecture-independent) yet 
 still quite efficient BLAS implementation. It is generally slower than a BLAS tuned for a 
 particular architecture such as MKL, but much faster than Netlib's reference BLAS implementation.
@@ -107,6 +122,7 @@ uBLAS prioritizes portability over performance, like ATLAS, but is slower than A
 architectures such as OpenBLAS, MTL or BLIS.
 
 ## So Which BLAS should I Use?
+
 Based on my research so far, I would do the following:
 
 * If you are on a Mac, use vecLib

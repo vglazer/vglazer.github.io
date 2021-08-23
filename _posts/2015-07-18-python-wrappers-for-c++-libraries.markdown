@@ -1,17 +1,22 @@
 ---
 layout: post
-title:  "Python Wrappers for C++ Libraries"
+title:  "Calling C++ from Python"
 date:   2015-07-18 17:05:19
-categories: programming python
+permalink: calling-python-from-cpp
+categories: programming python C++ bindings SWIG Boost Cython
 ---
 # The Problem
+
 Say you've written a library in C++ and you want to call it from Python. You basically have three options:
 
 * [SWIG](http://swig.org)
 * [Boost.Python](http://www.boost.org/doc/libs/1_58_0/libs/python/doc/)
 * [Cython](http://cython.org/)
 
+Below I try to give you a flavor for each.
+
 ## SWIG
+
 Given an *interface file* specifying the headers you wish to wrap plus some 
 wrapping directives, SWIG will generate a single source file containing an 
 `extern "C"` API for all relevant classes. It will also generate a Python 
@@ -31,6 +36,7 @@ to make sure all object code is position-independent, which might mean
 recompiling externals with `-fPIC`.
 
 ## Boost.Python
+
 Instead of generating the wrappers for you based on an *interface file*, 
 Boost.Python effectively gives you a template-based DSL for manually 
 specifying how to map C++ classes onto Python classes. Although this provides 
@@ -43,6 +49,7 @@ as with SWIG, except that in this case there is no `*.py` file and you directly
 import `mylib.so` in python.
 
 ## Cython
+
 Cython is similar to SWIG in that it generates wrappers for you, but instead of 
 a single *interface file* you have a `*.pxd` file and a `*.pyx` file which are 
 both written in Cython (a kind of extended Python). The 
