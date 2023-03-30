@@ -9,7 +9,7 @@ categories: libraries mac osx numerical_analysis linear_algebra scientific_compu
 ## TL;DR
 
 * If you are on a Mac, use vecLib
-* Otherwise, if you have an Intel CPU, use OpenBLAS or MTK
+* Otherwise, if you have an Intel CPU, use OpenBLAS or MKL
 * If you have an AMD CPU, use OpenBLAS or BLIS + libflame
 * For all other architectures such as ARM, use ATLAS
 * Avoid the reference BLAS implementation from Netlib
@@ -119,14 +119,14 @@ There is a FAQ [here](https://www.boost.org/doc/libs/1_68_0/libs/numeric/ublas/d
 and another one [here](http://www.crystalclearsoftware.com/cgi-bin/boost_wiki/wiki.pl?Frequently_Asked_Questions_Using_UBLAS).
 uBLAS prioritizes portability over performance, like ATLAS, but is slower than ATLAS due to the
 "abstraction penalty", and thus even slower than BLAS implementatinos tuned for particular
-architectures such as OpenBLAS, MTL or BLIS.
+architectures such as OpenBLAS, MKL or BLIS.
 
 ## So Which BLAS should I Use?
 
 Based on my research so far, I would do the following:
 
 * If you are on a Mac, use vecLib
-* Otherwise, if you have an Intel CPU, use OpenBLAS or MTK
+* Otherwise, if you have an Intel CPU, use OpenBLAS or MKL
 * If you have an AMD CPU, use OpenBLAS or BLIS + libflame
 * For all other architectures such as ARM, use ATLAS
 * Avoid the reference BLAS implementation from Netlib
@@ -135,6 +135,6 @@ Based on my research so far, I would do the following:
 These are just rules of thumb meant to maximize performance without sacrificing redistribution 
 rights. I suggested using vecLib on Macs mostly as a matter of convenience; I have no idea
 how it's performance compares to say OpenBLAS, but it would be interesting to check. Similarly,
-it's not clear to me whether MTK and BLIS outperform OpenBLAS on Intel and AMD, respectively,
+it's not clear to me whether MKL and BLIS outperform OpenBLAS on Intel and AMD, respectively,
 or whether OpenBLAS outperforms ATLAS on those architectures.
 
