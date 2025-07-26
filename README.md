@@ -1,9 +1,3 @@
----
-layout: page
-title: About
-permalink: /about/
----
-
 Hi there! I am **Victor Glazer**.
 
 I briefly contemplated dropping out of undergrad to pursue a career as a Drum & Bass producer, though not before working on some [research projects](https://github.com/vglazer/USRA), hand-coding [this animation](https://www.cs.toronto.edu/~glazer/gundam.avi) and making [this compiler](https://github.com/vglazer/csc488).
