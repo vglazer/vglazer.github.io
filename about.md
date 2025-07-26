@@ -10,4 +10,4 @@ I briefly contemplated dropping out of undergrad to pursue a career as a Drum & 
 
 Later on, I cut my [doctoral studies in Cryptography](https://www.cs.toronto.edu/~glazer/doc/VictorGlazerMSThesis.pdf) short to join a [Computer Vision startup](https://tineye.com/about).
 
-After that, I moved to New York City and spent the next 18 years working in Quantitative Finance at [BlackRock](https://www.blackrock.com/corporate/about-us) as part of [Aladdin](https://www.blackrock.com/aladdin).
+After that, I moved to New York City and spent the next 18 years working in Quantitative Finance at [BlackRock](https://www.blackrock.com/corporate/about-us) as part of the [Aladdin](https://www.blackrock.com/aladdin) platform.
