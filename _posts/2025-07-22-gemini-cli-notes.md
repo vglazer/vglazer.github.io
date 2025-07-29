@@ -1,13 +1,15 @@
 ---
 layout: post
-title:  "Getting Started with Gemini CLI"
+title:  "Gemini CLI Notes"
 date:   2025-07-22 16:47:00
-permalink: getting-started-with-gemini-cli-on-a-mac
-categories: ai agents llms productiviy devtools osx gemini google  
+permalink: gemini-cli-notes
+categories: ai agents llms productiviy devtools osx gemini gemini-cli google  
 ---
 
-## Why this post
-The Gemini CLI [launch post](https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/) does a good job of summarizing the tool's capabiliies and the [GitHub repo README.md](https://github.com/google-gemini/gemini-cli/) should help you get up and running quickly. However, the [full docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/index.md) cover a lot of ground and I thought others might also find the notes I took to help me navigate them useful. While there is a bit of a Mac focus, most of this should hopefully apply on other platforms as well.
+## Why this post?
+The Gemini CLI [launch post](https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/) already does a good job of summarizing the tool's capabiliies and the [GitHub repo README.md](https://github.com/google-gemini/gemini-cli/) should help you get up and running quickly. 
+
+However, the [full documentation](https://github.com/google-gemini/gemini-cli/blob/main/docs/index.md) covers a lot of ground and I thought others might find the notes I took to help me navigate it useful. While there is a bit of a Mac focus, most of this should hopefully apply on other platforms as well.
 
 ## TL;DR
 - Most settings are controlled via `~/.gemini/settings.json`. Project-specific `.gemini/settings.json` settings will be merged with the ones in `~/.gemini/settings.json`, so that you need only specify the ones you want to override.
@@ -31,31 +33,37 @@ You can subsequently switch between different authentication methods in a `gemin
 Your choice of authentication method will determine the API request rate limits ([Gemini Code Assist](https://ai.google.dev/gemini-api/docs/rate-limits#free-tier), [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/quotas), [Vertex AI Express Mode](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview#models)) and [what data is collected](https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md).
  
 ## Configuration
-Gemini CLI configuration involves a mix of command-line arguments, `.gemini/settings.json` files and environment variables. The exact order in which configuration layers are processed is described [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#configuration-layers). 
+Gemini CLI configuration involves a complex mix of command-line arguments, `settings.json` files and environment variables (optionally saved in `.env` files). The exact order in which configuration layers are processed is described [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#configuration-layers). 
 
-### settings.json
+### settings.json files
 The first time you run the `gemini` command-line utility, it will save a couple of settings to `~/.gemini/settings.json`, namely `"theme"` (e.g. [Dracula](https://draculatheme.com)) and `"auth type"` (e.g. `"oauth-personal"` or `"gemini-api-key"`). 
 
 The full list of available `settings.json` settings is [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#available-settings-in-settingsjson). In particular, if you want to [opt out](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#usage-statistics) of usage stats collection, set `"usageStatisticsEnabled": false`.
 
 You can create project-specific `.gemini/settings.json` settings. These will take precedence over the user-level settings in `~/.gemini/settings.json`, but they will be merged so that you only need to specify the settings you want to override at the project level.
 
-### Environment Variables
+### Environment Variables and .env files
 Some settings are controlled via environment variables. The full list of supported environment variables is [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files). Most of these aren't crucial, but a few key ones will be covered in subsequent sections.
 
-While environment variables can be set directly in `~/.zshrc` or `~/.bashrc`, the recommended approach is to store them in dedicated `.env` files and place these inside `.gemini` directories. In particular, this should reduce the likelihood of accidentally exposing sensitive data such as API keys. 
+While environment variables can be set directly in `~/.zshrc` or `~/.bashrc`, the recommended approach is to store them in dedicated `.env` files and place these inside `.gemini` directories for improved isolation. Th particular, this reduces   the likelihood of accidentally exposing sensitive data such as API keys because they are not actually exported to your shell environment (i.e. `env | grep GEMINI` returns no results if you `export GEMINI_API_KEY="<Your Gemini API Key>"` in `~/.gemini/.env` as opposed to in `~/.zshrc`).
 
-You can also create project-specific `.gemini/.env` files, but they work differently from project-specific `.gemini/settings.json` files. Rather than combining environment variables across multiple files, gemini will load them from the first `.env` file that it finds according [this search order](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md#persisting-environment-variables-with-env-files). This requires project-specific `.env` files to specify every relevant environment variable (such as `GEMINI_API_KEY`, for example) and not just the ones that you want to override in `~/.gemini/.env`.
+You can create project-specific `.gemini/.env` files, but they work differently from project-specific `.gemini/settings.json` files. Rather than combining environment variables across multiple files, gemini will load them from the first `.env` file that it finds according [this search order](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md#persisting-environment-variables-with-env-files). This requires project-specific `.env` files to explicitly set every relevant environment variable (such as `GEMINI_API_KEY`, for example) and not just the ones that you want to override in `~/.gemini/.env`.
 
 ### Putting It All Together
-Let's use sandboxing to illustrate how it all fits together, since it's off by default (more on that later) it can be alternatively turned on via a `settings.json` setting, an environment variable and a command-line switch:
+Let's use sandboxing to illustrate how it all fits together, since it's off by default (more on that later) and can be alternatively turned on via a `settings.json` setting, an environment variable and a command-line switch:
 - Create an empty project directory somewhere: `mkdir -p ~/junk/myproject; cd ~/junk/myproject`.
 - Run `gemini`. The status bar will say "no sandbox (see /docs)". Exit `gemini`.
-- Add `"sandbox": true` to `~/.gemini/settings.json` (there will be other settings in it, like `"auth type"`).
-- Run `gemini`. The status bar will indicate that sandboxing has been activated; on a Mac, it will say "macOS Seatbelt (permissive-open)". Exit `gemini`.
-- Create a fresh, project-specific `settings.json`: `mkdir .gemini; cd .gemini; echo '{"sandbox": true}' >> settings.json`.
-
-. If you end the session, add `sandbox: true` to `~/.gemini/settings.json` and restart `gemini`, the status bar will change to indicate that sandboxing has been enabled (on a Mac, it will say "macOS Seatbelt (permissive-open)" provided you haven't changed any other settings). If you end the session and add `export GEMINI_SANDBOX="false"` to `~/.gemini/.env`, without modifyding `settings.json`, and restart `gemini`, the status bar will once again say "no sandbox", because `.env` trumps `settings.json`. sandboxing will be disabled. On the other hand, if you have `export GEMINI_MODEL="gemini-2.5-pro"` in `~/.gemini/.env` and launch Gemini CLI with `gemini --model gemini-2.5-flash`, Gemini 2.5 Flash will be the model used for the session.
+- Add `"sandbox": true` to `~/.gemini/settings.json` to turn sandboxing on at the user level. Observe that `~/.gemini/settings.json` contains additional settings such as `"theme"` and `"selectedAuthType"`.
+- Run `gemini`. The status bar will now indicate that sandboxing has been activated; on a Mac, it will say "macOS Seatbelt (permissive-open)" assuming you haven't changed the default Seatbelt profile. Exit `gemini`.
+- Create a fresh, project-specific `settings.json` specifying only that sandboxing should be turned off: `mkdir .gemini; echo '{"sandbox": false}' > .gemini/settings.json`. Note that you didn't have to explicitly override e.g. `"selectedAuthType"`.
+- Run `gemini`. The status bar will once again say "no sandbox (see /docs)", because project-level `settings.json` settings take precedence over user-level `settings.json` settings. Exit `gemini`.
+- Turn sandboxing back on via a project-specific `.env` file: `echo 'export GEMINI_SANDBOX="true"' > .gemini/.env`
+- Run `gemini`. The status bar confirms that sandboxing in on again, because environment variables take precedence over `settings.json` settings. Exit `gemini`.
+- Turn sandboxing off at the user as well as the project level as far as `settings.json` settings go: `cat ~/.gemini/settings.json | sed 's/"sandbox": true/"sandbox": false/g' > ~/.gemini/settings.json`.
+- Run `gemini`. Sandboxing is _still_ on, because environment variables take precedence over `settings.json` settings regardless of the fact that `.env` happens to have been found in `.gemini` rather than in `~/.gemini`.
+- Turn sandboxing off as far as environment variables go via `echo 'export GEMINI_SANDBOX="false"' > .gemini/.env`.
+- Run `gemini` to confirm that sandboxing is indeed off. Exit `gemini`.
+- Run `gemini --sandbox`. Sandboxing is in now on, because command-line arguments take precedence over environment variables.
 
 ## Sandboxing
 Given Gemini CLI's ability to execute arbitrary commands on your machine, safety is definitely a concern. To mitigate this risk, Gemini CLI supports [sandboxing](https://github.com/google-gemini/gemini-cli/blob/main/docs/sandbox.md). **However, sandboxing is disabled by default except in "YOLO mode" (which is itself off by default for safety reasons)**. 
