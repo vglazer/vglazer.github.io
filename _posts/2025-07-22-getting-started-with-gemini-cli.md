@@ -1,0 +1,98 @@
+---
+layout: post
+title:  "Getting Started with Gemini CLI"
+date:   2025-07-22 16:47:00
+permalink: getting-started-with-gemini-cli-on-a-mac
+categories: ai agents llms productiviy devtools osx gemini google  
+---
+
+## TL;DR
+- On a Mac, you can `brew install gemini-cli`. Otherwise, `npm install -g @google/gemini-cli`.
+- Most settings are controlled via `~/.gemini/settings.json`. Project-specific `.gemini/settings.json` files are also supported and will be merged with the ones in `~/.gemini/settings.json`, so that you need only specify the settings you wish to override.
+- API keys and some other settings are controlled via environment variables set in `~/.gemini/.env`, which take precedence over `~/.gemini/settings.json`. You may create project-specific `.gemini/.env` files, but they will _not_ be merged with `~/.gemini/.env`, obliging you to specify every variable and not merely the ones you wish to override.
+- Sandboxing is disabled by default. To enable it, add `"sandbox": true` to `~/.gemini/settings.json` or `export GEMINI_SANDBOX="true"` in `~/.gemini/.env`. On a Mac, you can `export SEATBELT_PROFILE="<profile>"` in `~/.gemini/.env` to select from one of several bundled `sandbox-exec` profiles, with `permissive-open` being the default.
+- Specify context such as coding guidelines in `~/.gemini/GEMINI.md`. Hierarchical `.gemini/GEMINI.md` files are supported with context merged together. For additional info, use the `--debug` command-line option or the `/memory show` REPL command. Add context dynamically during a session with the `/memory add` REPL command.
+- Use `gemini --model <model>` or `export GEMINI_MODEL="<model>"` in `~/.gemini/.env` to override the default model, which is `gemini-2.5-pro`.
+
+## Basic setup
+A bare-bones `~/.gemini/settings.json` might look like the following:
+```
+{
+  "theme": "Dracula",
+  "usageStatisticsEnabled": false,
+  "selectedAuthType": "gemini-api-key"
+}
+```
+
+## Background
+[Gemini CLI](https://cloud.google.com/gemini/docs/codeassist/gemini-cli) lets you interact with is the Gemini suite of large language models directly from the terminal, complete with having them execute external commands such as `cargo run` or  `uv init` as part of an "agentic workflow". Integration with [MCP Servers](https://modelcontextprotocol.io/introduction) is also supported. For additional background, see the [launch post](https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/).
+
+## Installation
+The [standard way](https://github.com/google-gemini/gemini-cli/blob/main/docs/deployment.md#1-standard-installation-recommended-for-typical-users) to install Gemini CLI is via [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), like so: `npm install -g @google/gemini-cli`. On a Mac, you can instead `brew install gemini-cli` using [Homebrew](https://brew.sh).
+
+## Workflow
+After launching Gemini CLI from the terminal using the `gemini` command and authenticating yourself, you interact with it using a combination of prompts (informed by instructional context specified via GEMINI.md files) and REPL commands. The full list of command-line. 
+
+## Authentication
+Before you can use Gemini CLI, you will need to authenticate yourself with Google's AI services in one of three ways (additional details [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md)):
+
+- Log in with your Google account to gain access via [Gemini Code Assist](https://developers.google.com/gemini-code-assist/docs/overview) (the personal edition, ["Gemini Code Assist for individuals"](https://developers.google.com/gemini-code-assist/docs/overview#supported-features-gca), is available free of charge).
+
+- Create a [Gemini API key](https://aistudio.google.com/apikey) using Google AI Studio and tell Gemini CLI about it by adding `export GEMINI_API_KEY="<Your Gemini API Key>"` to your `~/.zshrc` (or `~/.bashrc` - the syntax is identical, so I will assume you are using zsh from now on).
+
+- Create a Vertex AI API key (either the paid version or the free Express Mode tier) and tell Gemini CLI about it by adding `export GOOGLE_API_KEY="Your Google Cloud API Key"` and `export GOOGLE_GENAI_USE_VERTEXAI=true` to your `~/.zshrc`.
+
+Your choice of authentication method will affect both rate limits ([Google AI Studio](https://ai.google.dev/gemini-api/docs/rate-limits#free-tier), [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/quotas), [Vertex AI Express Mode](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview#models)) and [data collection](https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md).
+
+You can subsequently switch between different authentication methods in a Gemini CLI session using the `/auth` REPL command.
+ 
+## Configuration
+Gemini CLI configuration is complex and involves a mix of command-line arguments, `.gemini/settings.json` files and environment variables. The exact order in which configuration layers are processed is described [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#configuration-layers). 
+
+The first time you run the `gemini` command-line utility, it will save a couple of settings to `~/.gemini/settings.json`, namely `"theme"` (e.g. [Dracula](https://draculatheme.com)) and `"auth type"` (e.g. `"oauth-personal"` or `"gemini-api-key"`). The full list of available `settings.json` settings is [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#available-settings-in-settingsjson). **In particular, if you want to [opt out](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#usage-statistics) of usage stats collection, set `"usageStatisticsEnabled": false`**. Settings may be specified [in hierarchical order](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#configuration-layers), with project-specific `settings.json` values overriding user defaults, which in turn take precedence over system defaults.
+
+Some settings are controlled via environment variables. The full list is [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files). Most of these aren't crucial, but a few key ones will be covered in subsequent sections. While environment variables can be set directly in your `~/.zshrc` or `~/.bashrc`, the recommended approach is to store them in dedicated `.env` files and place these inside `.gemini` directories. These are then [searched in hierarchical order](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md#persisting-environment-variables-with-env-files) starting from the current working directory up through `~/.gemini/.env`. **Note, however, that the search stops at the first `.env` file encountered and variables are _not_ merged across multiple files**.
+
+Let's use sandboxing to illustrate how it all fits together, since it's off by default (more on that later) it can be alternatively enabled via `settings.json`, environment variables and command-line switches:
+- Create an empty project directory somewhere: `mkdir -p ~/junk/myproject; cd ~/junk/myproject`.
+- Run `gemini`. The status bar will say "no sandbox (see /docs)". Exit `gemini`.
+- Add `"sandbox": true` to `~/.gemini/settings.json` (there will be other settings in it, like `"auth type"`).
+- Run `gemini`. The status bar will indicate that sandboxing has been activated; on a Mac, it will say "macOS Seatbelt (permissive-open)". Exit `gemini`.
+- Create a fresh, project-specific `settings.json`: `mkdir .gemini; cd .gemini; echo '{"sandbox": true}' >> settings.json`.
+
+. If you end the session, add `sandbox: true` to `~/.gemini/settings.json` and restart `gemini`, the status bar will change to indicate that sandboxing has been enabled (on a Mac, it will say "macOS Seatbelt (permissive-open)" provided you haven't changed any other settings). If you end the session and add `export GEMINI_SANDBOX="false"` to `~/.gemini/.env`, without modifyding `settings.json`, and restart `gemini`, the status bar will once again say "no sandbox", because `.env` trumps `settings.json`. sandboxing will be disabled. On the other hand, if you have `export GEMINI_MODEL="gemini-2.5-pro"` in `~/.gemini/.env` and launch Gemini CLI with `gemini --model gemini-2.5-flash`, Gemini 2.5 Flash will be the model used for the session.
+
+## Model Selection
+The `GEMINI_MODEL` environment variable lets you override the default model, which is equivalent to `export GEMINI_MODEL="gemini-2.5-pro"`. While there is no equivalent `settings.json` setting or REPL command for it, you can also specify which model to use for a given session via the `--model` [command-line argument](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#command-line-arguments). But why switch to other models when [Gemini 2.5 Pro](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro) is already "the best"? 
+
+[Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits#free-tier) are one reason. When using Gemini API keys, for example, you get more than twice as many free requests per day with [Gemini 2.5 Flash](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash) (`export GEMINI_MODEL="gemini-2.5-flash"`) as with Gemini 2.5 Pro. 
+
+Response time is another. With [Gemini 2.5 Flash-Lite](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite) (`export GEMINI_MODEL="gemini-2.5-flash-lite"`), you get much lower latency in addition to ten times as many free requests per day.
+
+Supported `<model>` values include `gemini-{2.0, 2.5}-{flash-lite, flash, pro}`.
+
+You can use the `/stats model` REPL command to see the number of requests made so far and their average latency. It will also show you the number of tokens used.
+
+## Sandboxing
+Given Gemini CLI's ability to execute arbitrary commands on your machine, safety is definitely a concern. To mitigate this risk, Gemini CLI supports [sandboxing](https://github.com/google-gemini/gemini-cli/blob/main/docs/sandbox.md). **However, sandboxing is disabled by default except in "YOLO mode" (which is itself off by default for safety reasons)**. 
+
+You can enable sandboxing in a given session via `gemini --sandbox` or persist it by adding `export GEMINI_SANDBOX="true"` to `.gemini/.env`. Alternatively, you can add `"sandbox": true` to `settings.json`. The default sandboxing methodology is platform-specific: `"sandbox-exec"` on a Mac and `"docker"` elsewhere. You can override it by explicitly setting `GEMINI_SANDBOX` to `"sandbox-exec"`, `"docker"` or `"podman"`, though `"sandbox-exec"` only works on a Mac.
+
+Gemini CLI ships with several [predefined sandbox-exec profiles](https://github.com/google-gemini/gemini-cli/blob/main/docs/sandbox.md#macos-seatbelt-profiles): "permissive-open", "permissive-proxied", "permissive-closed", "restrictive-open", "restrictive-proxied" and "restrictive-closed". The default profile is "permissive-open". It restricts writes outside the project directory, but allows most other operations. To select a different profile, `export SEATBELT_PROFILE="<profile>"` in `.gemini/.env`.
+
+The actual profile definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/cli/src/utils) and follow the naming schema `sandbox-macos-<profile-name>.sb`, e.g. [`sandbox-macos-permissive-open.sb`](https://github.com/google-gemini/gemini-cli/blob/main/packages/cli/src/utils/sandbox-macos-permissive-open.sb) for "permissive-open". It's also possible to create custom Seatbelt profiles and store them in your project's `.gemini` directory, as in `my-project/.gemini/sandbox-macos-custom-profile.sb`. The details of the `*.sb` file format are somewhat obscure, but [this page](https://github.com/s7ephen/OSX-Sandbox--Seatbelt--Profiles?tab=readme-ov-file) offers a good starting point. The full guide is [here](https://reverse.put.as/wp-content/uploads/2011/09/Apple-Sandbox-Guide-v1.0.pdf).
+
+## Tools
+Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools) which enable it to interact with your local environment. You can list the tools available during a given session using the `/tools` REPL coommand. For a longer description of each tool, use `/tools desc`. When sandboxing is enabled, Gemini CLI will only be able to use tools supported by the specified sandboxing methodology.
+
+Gemini CLI will prompt you before executing each tool unless it is in “YOLO mode”, which is off by default. YOLO mode can be enabled at start up via `gemini --yolo` or toggled off and on during a Gemini CLI session using `Ctrl + y`. **It's humorous name nothwistanding, YOLO mode should be considered dangerous given the criticality of having a human in the loop for any tools capable of modifying the local environment.**
+
+You can explicitly limit the tools availale to Gemini CLI via the `coreTools` and `excludeTools` settings in `settings.json`. The former explicitly lists what tools should be made availalbe (all, by default), whereas the latter excludes particular tools (none, by default). Moreover, when sandboxing is enabled, Gemini CLI will only be able access tools which are availalbe within the specified sandbox environment. 
+
+You can also impose tool-specific restrictions. Take the Shell Tool ([run_shell_command](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/shell.md)) for example, which is used to run scripts and perform command-line operations. You can prohibit specific commands such as `rm`, or only allow particular commands such as `git`, as described in the [Command Restrictions](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/shell.md#command-restrictions) section.
+
+For example, if you add `"coreTools": ["run_shell_command(git)"]` to `settings.json` and then ask Gemini CLI to "run ls", you will get an error message along the lines of `"Command 'ls -F' is not in the allowed commands list"`.
+
+## Instructional Context
+TODO    
+**To get a better sense of how it all fits together, try turning on debug mode with `gemini --debug`**.
