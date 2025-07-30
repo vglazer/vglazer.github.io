@@ -50,7 +50,7 @@ While environment variables can be set directly in `~/.zshrc` or `~/.bashrc`, th
 You can create project-specific `.gemini/.env` files, but they work differently from project-specific `.gemini/settings.json` files. Rather than combining environment variables across multiple files, gemini will load them from the first `.env` file that it finds according [this search order](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md#persisting-environment-variables-with-env-files). This requires project-specific `.env` files to explicitly set every relevant environment variable (such as `GEMINI_API_KEY`, for example) and not just the ones that you want to override in `~/.gemini/.env`.
 
 ### Putting It All Together
-Let's use sandboxing to illustrate how it all fits together. It's off by default (more on that later) and can be alternatively turned on via a `settings.json` setting, an environment variable and a command-line switch:
+Let's use sandboxing to illustrate how it all fits together. Sandboxing is off by default (more on that later) and can be alternatively turned on via a `settings.json`, environment variables and command-line switches:
 - Create an empty project directory and cd into it: `mkdir -p ~/junk/myproject; cd ~/junk/myproject`.
 - Run `gemini`. Sandboxing is _off_ (the status bar at the bottom will say "no sandbox (see /docs)"). Exit `gemini`.
 - Add `"sandbox": true` to `~/.gemini/settings.json`. You should also see additional settings there, such as `"theme"` and `"selectedAuthType"`.
