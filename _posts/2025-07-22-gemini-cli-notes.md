@@ -50,19 +50,16 @@ While environment variables can be set directly in `~/.zshrc` or `~/.bashrc`, th
 You can create project-specific `.gemini/.env` files, but they work differently from project-specific `.gemini/settings.json` files. Rather than combining environment variables across multiple files, gemini will load them from the first `.env` file that it finds according [this search order](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md#persisting-environment-variables-with-env-files). This requires project-specific `.env` files to explicitly set every relevant environment variable (such as `GEMINI_API_KEY`, for example) and not just the ones that you want to override in `~/.gemini/.env`.
 
 ### Putting It All Together
-Let's use sandboxing to illustrate how it all fits together, since it's off by default (more on that later) and can be alternatively turned on via a `settings.json` setting, an environment variable and a command-line switch:
-- Create an empty project directory somewhere: `mkdir -p ~/junk/myproject; cd ~/junk/myproject`.
-- Run `gemini`. The status bar will say "no sandbox (see /docs)". Exit `gemini`.
-- Add `"sandbox": true` to `~/.gemini/settings.json` to turn sandboxing on at the user level. Observe that `~/.gemini/settings.json` contains additional settings such as `"theme"` and `"selectedAuthType"`.
-- Run `gemini`. The status bar will now indicate that sandboxing has been activated; on a Mac, it will say "macOS Seatbelt (permissive-open)" assuming you haven't changed the default Seatbelt profile. Exit `gemini`.
-- Create a fresh, project-specific `settings.json` specifying only that sandboxing should be turned off: `mkdir .gemini; echo '{"sandbox": false}' > .gemini/settings.json`. Note that you didn't have to explicitly override e.g. `"selectedAuthType"`.
-- Run `gemini`. The status bar will once again say "no sandbox (see /docs)", because project-level `settings.json` settings take precedence over user-level `settings.json` settings. Exit `gemini`.
-- Turn sandboxing back on via a project-specific `.env` file: `echo 'export GEMINI_SANDBOX="true"' > .gemini/.env`
-- Run `gemini`. The status bar confirms that sandboxing in on again, because environment variables take precedence over `settings.json` settings. Exit `gemini`.
-- Turn sandboxing off at the user as well as the project level as far as `settings.json` settings go: `cat ~/.gemini/settings.json | sed 's/"sandbox": true/"sandbox": false/g' > ~/.gemini/settings.json`.
-- Run `gemini`. Sandboxing is _still_ on, because environment variables take precedence over `settings.json` settings regardless of the fact that `.env` happens to have been found in `.gemini` rather than in `~/.gemini`.
-- Turn sandboxing off as far as environment variables go via `echo 'export GEMINI_SANDBOX="false"' > .gemini/.env`.
-- Run `gemini` to confirm that sandboxing is indeed off. Exit `gemini`.
+Let's use sandboxing to illustrate how it all fits together. It's off by default (more on that later) and can be alternatively turned on via a `settings.json` setting, an environment variable and a command-line switch:
+- Create an empty project directory and cd into it: `mkdir -p ~/junk/myproject; cd ~/junk/myproject`.
+- Run `gemini`. Sandboxing is _off_ (the status bar at the bottom will say "no sandbox (see /docs)"). Exit `gemini`.
+- Add `"sandbox": true` to `~/.gemini/settings.json`. You should also see additional settings there, such as `"theme"` and `"selectedAuthType"`.
+- Run `gemini`. Sandboxing is _on_ (on a Mac, the status bar should now say "macOS Seatbelt (permissive-open)"). Exit `gemini`.
+- Create a project-specific `settings.json` file: `mkdir .gemini; echo '{"sandbox": false}' > .gemini/settings.json`.
+- Run `gemini`. Sandboxing is _off_, because project-level `settings.json` override user-level `settings.json`. Note that you only needed to specify the setting you wanted to override. Exit `gemini`.
+- Set the `GEMINI_SANDBOX` environment variable via a user-level `.env` file: `echo 'export GEMINI_SANDBOX="true"' >> ~/.gemini/.env`.
+- Run `gemini`. Sandboxing in _on_, because environment variables take precedence over `settings.json`. Exit `gemini`.
+- Create a project-specific `.env` file: `echo 'export GEMINI_SANDBOX="false"' > .gemini/.env`.
 - Run `gemini --sandbox`. Sandboxing is in now on, because command-line arguments take precedence over environment variables.
 
 ## Sandboxing
