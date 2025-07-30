@@ -53,7 +53,8 @@ You can create project-specific `.gemini/.env` files, but they work differently 
 Let's use sandboxing to illustrate how it all fits together. 
 
 Sandboxing is off by default (more on that later) and can be alternatively turned on via `settings.json`, environment variables and command-line switches:
-- Create an empty project directory and `cd` into it: `mkdir -p ~/junk/myproject; cd ~/junk/myproject`.
+- Create an empty project directory: `mkdir -p ~/junk/myproject`.
+- `cd ~/junk/myproject` so that `myproject` is your current project.
 - Run `gemini`. Sandboxing is _off_ (the status bar at the bottom will say "no sandbox (see /docs)"). Exit `gemini`.
 - Add `"sandbox": true` to the user-level settings in `~/.gemini/settings.json`. You should also see additional settings there, such as `"theme"` and `"selectedAuthType"`.
 - Run `gemini`. Sandboxing is _on_ (on a Mac, the status bar will say "macOS Seatbelt (permissive-open)" if you are using the default Seatbelt profile). Exit `gemini`.
@@ -64,9 +65,9 @@ Sandboxing is off by default (more on that later) and can be alternatively turne
 - Create a project-specific `.env` file: `echo 'export GEMINI_SANDBOX="false"' > .gemini/.env`. This is sufficient if `"selectedAuthType"` is set to `"oauth-personal"` in `~/.gemini/settings.json`.
 - Run `gemini`. Sandboxing in _off_, because the project-specific `.gemini/.env` file _shadows_ the user-level `~/.gemini/.env` file. 
   - However, unlike with project-level `settings.json` overrides (where only `sandbox` needed to be specified), _all_ relevant environment variables must be set in `.gemini/.env` and not just `GEMINI_SANDBOX`. 
-  - For example, if `"selectedAuthType` is set to `"gemini-api-key"` in `~/.gemini/settings.json`, you will need to `export GEMINI_API_KEY="<Your Gemini API Key>"` in `myproject/.gemini/.env` in order to successfully authenticate yourself when running `gemini` from within the `myproject` directory, _even when using the same Gemini API key as the one set in `~/.gemini/.env`_.
-- Run `gemini`. Execute the `/auth` REPL command and select "Use Gemini API Key" when asked "How would you like to authenticate for this project?". You will get an error message indicating that "GEMINI_API_KEY environment variable [was] not found" even if `GEMINI_API_KEY` is set in `~/.gemini/.env`. Exit `gemini`.
-- Run `cd ..; gemini` so that `myproject` is no longer the current working directory. Execute the `/auth` REPL command and select "Use Gemini API Key" when prompted. As long as you have a valid Gemini API key specified in `~/.gemini/.env`, you will be able to authenticate successfully because `~/.gemini/.env` won't be shadowed by `myproject/.gemini/.env` in this case.
+  - For example, if `"selectedAuthType` is set to `"gemini-api-key"` in `~/.gemini/settings.json`, you will need to `export GEMINI_API_KEY="<Your Gemini API Key>"` in `myproject/.gemini/.env` in order to successfully authenticate yourself when running `gemini` from within the `myproject` directory, _even when using the same Gemini API key as the one in `~/.gemini/.env`_. Exit `gemini`.
+- Run `gemini`. Sandboxing is still _off_, as before. Execute the `/auth` REPL command and select "Use Gemini API Key" when asked "How would you like to authenticate for this project?". You will get an error message indicating that "GEMINI_API_KEY environment variable [was] not found". Exit `gemini`.
+  - If you have a valid Gemini API key set in `~/.gemini/.env`, this error message can be avoided by copying it to `.gemini/.env` using e.g. `grep GEMINI_API_KEY ~/.gemini/.env >> .gemini/.env`.
 - Run `gemini --sandbox`. Sandboxing is in now on, because command-line arguments take precedence over environment variables.
 
 ## Sandboxing
