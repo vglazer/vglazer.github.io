@@ -30,7 +30,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - The auth type determines the model request limits as well as what data Google collects. See the [Terms of Service and Privacy Notice](https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md) for details. **Keep in mind that if you authenticate using your personal Google account or use the free Google AI tier, your code, prompts and responses will be used to train Google models**. 
 - If `"selectedAuthType"` is set to `"oauth-personal"`, you will need to log into your Google account via the browser. This will create `~/.gemini/google_accounts.json` and `~/.gemini/oauth_creds.json`. 
   - Currently (August 2025), you get the most free Gemini 2.5 Pro requests this way ([60 per minute and 1,000 per day](https://github.com/google-gemini/gemini-cli?tab=readme-ov-file#common-configuration-steps)). 
-  - However, **[token caching](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/token-caching.md) is not available for this auth type**. You can view your token usage for a given `gemini` session using the `/stats` REPL command.
+  - However, **[token caching](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/token-caching.md) is not available for this auth type**. You can view your token usage for a given `gemini` session using the `/stats` and `/stats model` REPL commands.
 - If `"selectedAuthType"` is set to `"gemini-api-key`", you will need to `export GEMINI_API_KEY="<Your Gemini API Key>"` in e.g. `~/.gemini/.env`. You can obtain a Gemini API key [here](https://aistudio.google.com/apikey). 
   - Currently (August 2025), the [Free Tier rate limits](https://ai.google.dev/gemini-api/docs/rate-limits#free-tier) for Gemini 2.5 Pro are 5 requests per minute and 100 requests per day. While this is an order of magnitude lower than what you get by authenticating using your personal Google account, **token caching is available for this auth type**. 
   - To get 1,000 requests per day using the Free Tier, you would need to switch to Gemini 2.5 Flash Lite, a less capable model. The lowest paid tier, Tier 1, gives you 150 requests per minute and 10,000 requests per day using Gemini 2.5 Pro.
@@ -41,11 +41,27 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - You can also `export GEMINI_MODEL="<model>"` in `~/.gemini/.env` or another `.env` file.
 
 ## Built-in Tools
-- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools). 
-- Use the `/tools` REPL command to list available tools. For a longer description of each tool, use `/tools desc`.
-- Use the `coreTools` setting in `settings.json` to restrict availalbe tools. For example, `"coreTools" : []` means that no tools will be available whereas `"coreTools": ["LSTool"]` means that only `LSTool` will be available.
-- The name tools appear under when you run `/tools` may not match the one you need to use in `coreTools`. For example, LSTool shows up as `ReadFolder`. This is because `LSTool.Name` is set to `ReadFolder` in [`ls.ts`](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/ls.ts).
-- Alternatively, remove only the specified tools via the `excludeTools` setting in `settings.json`. For example, if you add `"execludeTools": ["LSTool"]` to `settings.json` and run `/tools`, `ReadFolder` will be gone.
+- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools). Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). 
+- Use the `/tools` REPL command to list the tools available in a given `gemini` session. For a longer description of each tool, use `/tools desc`.
+- Use the `coreTools` setting in `settings.json` to explicitly list what tools should be made available. For example, `"coreTools" : []` means that no tools will be available whereas `"coreTools": ["LSTool"]` means that only `LSTool` will be available.
+- Use the `excludeTools` setting in `settings.json` to prevent tools from being available. For example, `"execludeTools": ["LSTool"]` will remove `LSTool` from the list of availalbe tools.
+- The name a tool appears under when you run `/tools` may not match the one you need to use in `coreTools` or `excludeTools`. For example, `LSTool` shows up as "ReadFolder". This is because `LSTool.Name` is set to `ReadFolder` in [`ls.ts`](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/ls.ts), where its definition lives. 
+- Most built-in tools follow the pattern of `FooBarTool` for the `settings.json name`, “FooBar” for the `/tools` name and `foo-bar.ts` for the definition, but there are a handful of exceptions of which `LSTool` is one.
+- Below are the `settings.json` names for the built-in tools, along with what `/tools` calls them and where they are defined:
+
+  | settings.json name   | /tools name     | definition         |
+  |----------------------|-----------------|--------------------|
+  | `EditTool`           | "Edit"          | [edit.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/edit.ts)         |
+  | `GlobTool`           | "FindFiles"     | [glob.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/glob.ts)         |
+  | `WebSearchTool`      | "GoogleSearch"  | [web-search.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/web-search.ts)      |
+  | `ReadFileTool`       | "ReadFile"      | [read-file.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/read-file.ts)       |
+  | `LSTool`             | "ReadFolder"    | [ls.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/ls.ts)           |
+  | `ReadManyFilesTool`  | "ReadManyFiles" | [read-many-files.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/read-many-files.ts) |
+  | `MemoryTool`         | "Save Memory"   | [memoryTool.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/memoryTool.ts)      |
+  | `GrepTool`           | "SearchText"    | [grep.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/grep.ts)         |
+  | `ShellTool`          | "Shell"         | [shell.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/shell.ts)           |
+  | `WebFetchTool`       | "WebFetch"      | [web-fetch.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/web-fetch.ts)       |
+  | `WriteFileTool`      | "WriteFile"     | [write-file.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/write-file.ts)      |  
 
 ## Sandboxing
 - When sandboxing is enabled, Gemini CLI will only be able to use tools supported by the sandbox environment, regardless of what tools are available to it.
@@ -128,7 +144,7 @@ export SEATBELT_PROFILE="custom" # {permissive, restrictive}-{open, proxied, clo
   - The instructional context will be a combination of user-level context from `~/.gemini/GEMINI.md`, project-specific context from `myproject/GEMINI.md` and  module-specific context from `myproject/some_module/GEMINI.md`. Run the `/memory show` REPL command to confirm. 
   - Since command-line argument take precedence over `settings.json` and `.env` files, even after you `cd myproject` you can still turn off sandboxing via `gemini --sandbox false` or explicitly select a different model via `gemini --model gemini-2.0-pro`.
 
-## More on Configuration Layer Processing
+## Appendix: Configuration Layer Processing
 We can use sandboxing to illustrate the order in which Gemini CLI processes configuration layers, since it's off by default and can alternatively be turned on via `settings.json` files, `.env` files and command-line arguments:
 
 - Create an empty project directory: `mkdir -p ~/junk/myproject`.
