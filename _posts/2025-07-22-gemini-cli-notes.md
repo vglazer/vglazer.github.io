@@ -41,7 +41,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - You can also `export GEMINI_MODEL="<model>"` in `~/.gemini/.env` or another `.env` file.
 
 ## Built-in Tools
-- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools). Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). 
+- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools) written in TypeScript. Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). 
 - Use the `/tools` REPL command to list the tools available in a given `gemini` session. For a longer description of each tool, use `/tools desc`.
 - Use the `coreTools` setting in `settings.json` to explicitly list what tools should be made available. For example, `"coreTools" : []` means that no tools will be available whereas `"coreTools": ["LSTool"]` means that only `LSTool` will be available.
 - Use the `excludeTools` setting in `settings.json` to prevent tools from being available. For example, `"execludeTools": ["LSTool"]` will remove `LSTool` from the list of availalbe tools.
