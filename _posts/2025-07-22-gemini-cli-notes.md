@@ -10,6 +10,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - [Launch post](https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/)
 - [GitHub repo](https://github.com/google-gemini/gemini-cli/)
 - [Documentation](https://github.com/google-gemini/gemini-cli/blob/main/docs/index.md)
+  - [Architecture](https://github.com/google-gemini/gemini-cli/blob/main/docs/architecture.md)
   - [settings.json settings](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#available-settings-in-settingsjson)
   - [.env environment varialbes](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files)
   - [gemini REPL commands](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/commands.md)
@@ -41,10 +42,9 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - You can also `export GEMINI_MODEL="<model>"` in `~/.gemini/.env` or another `.env` file.
 
 ## Built-in Tools
-- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools) written in TypeScript. Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). 
+- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools) written in Typescript. Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). This is the [tool execution flow](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#tool-execution-flow). 
 - Use the `/tools` REPL command to list the tools available in a given `gemini` session. For a longer description of each tool, use `/tools desc`.
 - Use the `coreTools` setting in `settings.json` to explicitly list what tools should be made available. For example, `"coreTools" : []` means that no tools will be available whereas `"coreTools": ["LSTool"]` means that only `LSTool` will be available.
-- Use the `excludeTools` setting in `settings.json` to prevent tools from being available. For example, `"execludeTools": ["LSTool"]` will remove `LSTool` from the list of availalbe tools.
 - The name a tool appears under when you run `/tools` may not match the one you need to use in `coreTools` or `excludeTools`. For example, `LSTool` shows up as "ReadFolder". This is because `LSTool.Name` is set to `ReadFolder` in [`ls.ts`](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/ls.ts), where its definition lives. 
 - Most built-in tools follow the pattern of `FooBarTool` for the `settings.json name`, “FooBar” for the `/tools` name and `foo-bar.ts` for the definition, but there are a handful of exceptions of which `LSTool` is one.
 - Below are the `settings.json` names for the built-in tools, along with what `/tools` calls them and where they are defined:
@@ -63,6 +63,23 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
   | `WebFetchTool`       | "WebFetch"      | [web-fetch.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/web-fetch.ts)       |
   | `WriteFileTool`      | "WriteFile"     | [write-file.ts](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/write-file.ts)      |  
 
+- The default set of tools correponds to having the following `coreTools` setting in `settings.json`: 
+```
+"coreTools": ["EditTool", 
+                "GlobTool", 
+                "WebSearchTool", 
+                "ReadFileTool", 
+                "LSTool", 
+                "ReadManyFilesTool", 
+                "MemoryTool", 
+                "GrepTool", 
+                "ShellTool", 
+                "WebFetchTool", 
+                "WriteFileTool"]
+```
+- You can also use the `excludeTools` setting in `settings.json` to remove tools from the default list. For example, `"execludeTools": ["LSTool"]` will remove `LSTool` from the list of availalbe tools.
+- You can extend the list of available tools using MCP Servers. See [this page](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md) for details.
+
 ## Sandboxing
 - When sandboxing is enabled, Gemini CLI will only be able to use tools supported by the sandbox environment, regardless of what tools are available to it.
 - Sandboxing is off by default. Add `"sandbox": true` to `~/.gemini/settings.json` to turn it on. 
@@ -78,6 +95,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). See, e.g. Gemini CLI's [own GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md). 
 - Project-specific context will be merged with user-level context. Use the `/memory show` REPL command to see the overall, merged context.
 - Context can be controlled in a more granular way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining exactly which ones are included. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
+- Context loaded from `GEMINI.md` files will consume tokens available in the context window. However, given that the size if 1 million tokens for Gemini 2.5 Pro, this generally should not be an issue.
 
 ## An Illustrative Example
 Say that you are on a Mac and didn't set any Gemini CLI-related environment variables in `~/.zshrc` or `~/.bashrc`. Assume that your user-level Gemini CLI configuration looks like this:
