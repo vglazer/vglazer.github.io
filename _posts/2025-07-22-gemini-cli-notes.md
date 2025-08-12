@@ -121,9 +121,10 @@ This is apparently [a known issue](https://github.com/google-gemini/gemini-cli/i
 
 ## Instructional Context ("Memory")
 - Gemini CLI loads instructional context (aka "memory") from files named `GEMINI.md` (the name can be changed via the `contextFileName` setting in `settings.json`).
+- For a sample `GEMINI.md` file, have a look at Gemini CLI's [own](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md).
 - Context loaded from `GEMINI.md` files uses up context window tokens, but this should not be material for Gemini 2.5 Pro, whose context window is large (1 million tokens).
 - Store user-level context in `~/.gemini/GEMINI.md`. You can add to it dynamically using the `/memory add` REPL command.
-- Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). In other words, put in the same kind of places where `README.md` might go. For a sample `GEMINI.md` file, have a look at Gemini CLI's [own](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md). 
+- Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). In other words, put it in the same sort of places where a `README.md` would go.
 - Project-specific context will be merged with user-level context. Use the `/memory show` REPL command to see the overall, merged context.
 - Context can be controlled in a more granular way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining exactly which ones are included. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
 
