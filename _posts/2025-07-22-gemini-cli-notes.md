@@ -121,12 +121,12 @@ This is apparently [a known issue](https://github.com/google-gemini/gemini-cli/i
 
 ## Instructional Context ("Memory")
 - Gemini CLI loads instructional context (aka "memory") from files named `GEMINI.md` (the name can be changed via the `contextFileName` setting in `settings.json`).
-- For a sample `GEMINI.md` file, have a look at Gemini CLI's [own](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md).
-- Context loaded from `GEMINI.md` files uses up context window tokens, but this should not be material for Gemini 2.5 Pro, whose context window is large (1 million tokens).
+- For an example, have a look at Gemini CLI's [own GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md).
+- Context loaded from `GEMINI.md` files uses up context window tokens. This should not be material for Gemini 2.5 Pro, whose context window is large (1 million tokens).
 - Store user-level context in `~/.gemini/GEMINI.md`. You can add to it dynamically using the `/memory add` REPL command.
-- Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). In other words, put it in the same sort of places where a `README.md` would go.
-- Project-specific context will be merged with user-level context. Use the `/memory show` REPL command to see the overall, merged context.
-- Context can be controlled in a more granular way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining exactly which ones are included. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
+- Store `myproject`-specific context in `myproject/GEMINI.md` (rather than `myproject/.gemini/GEMINI.md`). In other words, put it in the same sort of places where a `README.md` would go.
+- Project-specific context will be merged with user-level context. Run the `/memory show` REPL command to see the overall, merged context.
+- Context can be controlled in hierarchical way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining which ones are loaded. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
 
 ## An Illustrative Example
 Say that you are on a Mac and didn't set any Gemini CLI-related environment variables in `~/.zshrc` or `~/.bashrc`. Assume that your user-level Gemini CLI configuration looks like this:
@@ -177,24 +177,26 @@ export SEATBELT_PROFILE="custom" # {permissive, restrictive}-{open, proxied, clo
 ```
 - If you run  `gemini` _outside_ `myproject`:
   - You will authenticate using a Gemini API key, as per `~/.gemini/settings.json`
-  - The API key will be read from `~/.gemini/.env`. If you comment `GEMINI_API_KEY` out you will get an error and `gemini` will fail to launch.
+  - The API key will be read from `~/.gemini/.env` (commenting out `GEMINI_API_KEY`will result in an error).
   - Sandboxing will be enabled, as per `~/.gemini/settings.json`.
-  - Since no sandboxing methodology was specified explicitly, `sandbox-exec` will be used (the default, on a Mac).
-  - The Seatbelt profile will be `permissive-open` (the default).
-  - The model will be Gemini 2.5 Flash Lite, as per `~/.gemini/.env`.
-  - The default set of tools will be availalbe. Run the `/tools` REPL command to list them.
-  - The instructional context will generally consist of the user-level context in `~/.gemini/GEMINI.md`, unless other GEMINI.md files are picked up based on your current working directory. Run the `/memory show` REPL command to confirm.
+  - Since no sandboxing methodology was specified explicitly, `sandbox-exec` will be used (the Mac default).
+  - The Seatbelt profile used will be `permissive-open` (the default).
+  - The model used will be Gemini 2.5 Flash Lite, as per `~/.gemini/.env`.
+  - The default tool set will be availalbe. Run the `/tools` REPL command to confirm.
+  - The instructional context should consist of the user-level context in `~/.gemini/GEMINI.md` alone, unless other `GEMINI.md` files happen to have been picked up based on your current working directory. Run the `/memory show` REPL command to confirm.
 - On the other hand, if you `cd myproject; gemini`:
   - You will authenticate using your Google account, as per `myproject/.gemini/settings.json`.
-  - Since there is no need for an API key, commenting out `GEMINI_API_KEY` in `~/.gemini/.env` has no effect.
-  - The Seatbelt profile used will be `myproject/.gemini/sandbox-macos-custom.sb`, as per `myproject/.gemini/.env`.
-  - Irrespective of what `~/.gemini/.env` says, the model will be Gemini 2.5 Flash Pro (the default), even though you didn't specify `GEMINI_MODEL` in `myproject/.gemini/.env`.
-  - `ShellTool` won't be available, per `myproject/.gemini/settings.json`. Run the `/tools` REPL command to confirm that `"Shell"` does not appear.
+  - Since there is no need for an API key, commenting out `GEMINI_API_KEY` in `~/.gemini/.env` won't have an effect.
+  - The Seatbelt profile used will be `myproject/.gemini/sandbox-macos-custom.sb`, as dictated by `myproject/.gemini/.env`.
+  - Irrespective of what `~/.gemini/.env` says, the model used will be Gemini 2.5 Pro (the default), even though you didn't specify `GEMINI_MODEL` in `myproject/.gemini/.env`. Since `gemini` finds `myproject/.gemini/.env` first, the contents of `~/.gemini/.env` are irrelevant.
+  - `ShellTool` won't be available, per `myproject/.gemini/settings.json`. Run the `/tools` REPL command to confirm.
   - The instructional context will be a combination of user-level context from `~/.gemini/GEMINI.md`, project-specific context from `myproject/GEMINI.md` and  module-specific context from `myproject/some_module/GEMINI.md`. Run the `/memory show` REPL command to confirm. 
-  - Since command-line argument take precedence over `settings.json` and `.env` files, even after you `cd myproject` you can still turn off sandboxing via `gemini --sandbox false` or explicitly select a different model via `gemini --model gemini-2.0-pro`.
+  - Since command-line argument take precedence over `settings.json` and `.env` files, even after you `cd myproject` you can still: 
+    - Turn off sandboxing via `gemini --sandbox false`
+    - Explicitly select a different model via `gemini --model gemini-2.5-flash`.
 
 ## Appendix: Configuration Layer Processing
-We can use sandboxing to illustrate the order in which Gemini CLI processes configuration layers, since it's off by default and can alternatively be turned on via `settings.json` files, `.env` files and command-line arguments:
+We can use sandboxing to illustrate the order in which Gemini CLI processes "configuration layers", since sandboxing is off by default and can alternatively be turned on via `settings.json` files, `.env` files and command-line arguments:
 
 - Create an empty project directory: `mkdir -p ~/junk/myproject`.
 - `cd ~/junk/myproject` so that `myproject` is your current project.
@@ -205,8 +207,9 @@ We can use sandboxing to illustrate the order in which Gemini CLI processes conf
 - Run `gemini`. Sandboxing is _off_, **because project-level `settings.json` settings override user-level `settings.json` settings**. Note that you only need to specify the value of `sandbox`, the setting you want to override. Exit `gemini`.
 - Set the `GEMINI_SANDBOX` environment variable via a user-level `.env` file: `echo 'export GEMINI_SANDBOX="true"' >> ~/.gemini/.env`.
 - Run `gemini`. Sandboxing in _on_, **because environment variables take precedence over `settings.json` settings**. Exit `gemini`.
-- Create a project-specific `.env` file: `echo 'export GEMINI_SANDBOX="false"' > .gemini/.env`. This is sufficient if `"selectedAuthType"` is set to `"oauth-personal"` in `~/.gemini/settings.json`.
-  - However, unlike with project-level `settings.json` overrides (where only `sandbox` needed to be specified), _all_ relevant environment variables must be set in `.gemini/.env` file and not just `GEMINI_SANDBOX`.
-  - For example, if `"selectedAuthType"` is set to `"gemini-api-key"` in `~/.gemini/settings.json`, you will need to `export GEMINI_API_KEY="<Your Gemini API Key>"` in `myproject/.gemini/.env` in order to successfully authenticate yourself when running `gemini` from within `myproject`.
+- Create a project-specific `.env` file: `echo 'export GEMINI_SANDBOX="false"' > .gemini/.env`. 
+  - This is sufficient if `"selectedAuthType"` is set to `"oauth-personal"` in `~/.gemini/settings.json`.
+  - However, unlike with project-level `settings.json` overrides (where only `sandbox` needed to be specified), _all_ relevant environment variables must be specified in `.gemini/.env` and not just `GEMINI_SANDBOX`.
+  - For example, if `"selectedAuthType"` is set to `"gemini-api-key"` in `~/.gemini/settings.json`, you will need to add `export GEMINI_API_KEY="<Your Gemini API Key>"` to `myproject/.gemini/.env` in order to successfully authenticate yourself when running `gemini` from `myproject`.
 - Run `gemini`. Sandboxing in _off_, **because the project-specific `.gemini/.env` file _shadows_ the user-level `~/.gemini/.env` file**. Exit `gemini`.
 - Run `gemini --sandbox`. Sandboxing is _on_, **because command-line arguments take precedence over environment variables**.
