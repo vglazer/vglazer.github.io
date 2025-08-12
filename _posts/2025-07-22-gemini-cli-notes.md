@@ -8,13 +8,13 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 
 ## Background and Documentation
 - [Launch post](https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/)
-- [GitHub repo](https://github.com/google-gemini/gemini-cli/)
+- [gemini-cli GitHub repo](https://github.com/google-gemini/gemini-cli/)
 - [Documentation](https://github.com/google-gemini/gemini-cli/blob/main/docs/index.md)
-  - [Architecture](https://github.com/google-gemini/gemini-cli/blob/main/docs/architecture.md)
+  - [Architecture Overview](https://github.com/google-gemini/gemini-cli/blob/main/docs/architecture.md)
   - [settings.json settings](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#available-settings-in-settingsjson)
-  - [.env environment varialbes](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files)
-  - [gemini REPL commands](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/commands.md)
-  - [GEMINI.md "context files"](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context)
+  - [Environment variables](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files)
+  - [REPL commands](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/commands.md)
+  - [GEMINI.md files](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context)
   - [Built-in Tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/index.md)
 
 ## Configuration Layers
@@ -22,8 +22,8 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - Project-specific `myproject/.gemini/settings.json` files _override_ `~/.gemini/settings.json`. You only need to specify settings whose user-level values you want to change.
 - API keys and some other settings are controlled via [environment variables](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files). It is recommended to store them in `~/.gemini/.env` instead of adding them directly to `~/.zshrc` or `~/.bashrc`.
 - Project-specific `myproject/.gemini/.env` files _shadow_ `~/.gemini/.env`. You must specify all environment variables, even if you don't want to change their user-level values.
-- .env takes precedence over `settings.json` and command-line arguments trump both. See the Appendix below for an example of how Gemini CLI [processes configuration layers](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#configuration-layers).
-- In particular, the directory where you launch `gemini` will affect which `settings.json` and `.env` settings are picked up.
+- `.env` takes precedence over `settings.json`, whereas command-line arguments trump both. See the Appendix at the end of the post for a deeper dive into how Gemini CLI [processes configuration layers](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#configuration-layers).
+- In particular, the current working directory will affect which `settings.json`, `.env` and `GEMINI.md` files `gemini` picks up.
 
 ## Authentication, Request Limits and Privacy
 - The `"selectedAuthType"` setting determines how you [authenticate with Google's AI services](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md): `"oauth-personal"` (personal Google account), `"gemini-api-key`" ([AI Studio](https://aistudio.google.com/prompts/new_chat)) or `"vertex-ai"` ([Vertex AI](https://cloud.google.com/vertex-ai)).
