@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Gemini CLI Notes"
-date:   2025-07-22 16:47:00
+date:   2025-08-11 22:00:00
 permalink: gemini-cli-notes
 categories: ai agents llms productiviy devtools osx gemini gemini-cli google  
 ---
@@ -42,7 +42,8 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - You can also `export GEMINI_MODEL="<model>"` in `~/.gemini/.env` or another `.env` file.
 
 ## Built-in Tools
-- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools) written in Typescript. Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). This is the [tool execution flow](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#tool-execution-flow). 
+- Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools). Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools). This is the [tool execution flow](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#tool-execution-flow). 
+- You can extend the list of built-in tools using MCP Servers. See [this page](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md) for details.
 - Use the `/tools` REPL command to list the tools available in a given `gemini` session. For a longer description of each tool, use `/tools desc`.
 - Use the `coreTools` setting in `settings.json` to explicitly list what tools should be made available. For example, `"coreTools" : []` means that no tools will be available whereas `"coreTools": ["LSTool"]` means that only `LSTool` will be available.
 - The name a tool appears under when you run `/tools` may not match the one you need to use in `coreTools` or `excludeTools`. For example, `LSTool` shows up as "ReadFolder". This is because `LSTool.Name` is set to `ReadFolder` in [`ls.ts`](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/tools/ls.ts), where its definition lives. 
@@ -77,25 +78,52 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
                 "WebFetchTool", 
                 "WriteFileTool"]
 ```
-- You can also use the `excludeTools` setting in `settings.json` to remove tools from the default list. For example, `"execludeTools": ["LSTool"]` will remove `LSTool` from the list of availalbe tools.
-- You can extend the list of available tools using MCP Servers. See [this page](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md) for details.
+- You can also use the `excludeTools` setting in `settings.json` to remove tools from the default list. For example, adding `"execludeTools": ["ShellTool"]` to `settings.json` will remove `Shell` from the list of availalbe `/tools`. 
+- A tool listed in both `coreTools` and `excludeTools` is excluded. This means that you could set `coreTools` to the default set of tools and list just the ones you want to disallow in `excludeTools`. For example, if `settings.json` includes
+```
+"coreTools": ["EditTool", 
+                "GlobTool", 
+                "WebSearchTool", 
+                "ReadFileTool", 
+                "LSTool", 
+                "ReadManyFilesTool", 
+                "MemoryTool", 
+                "GrepTool", 
+                "ShellTool", 
+                "WebFetchTool", 
+                "WriteFileTool"]
+"excludeTools": ["WebSearchTool", "ShellTool", "WebFetchTool"]
+```
+then `/tools` won't show `GoogleSearch`, `Shell` and `WebFetch` whereas the rest of the default tools will remain.
+- `ShellTool` can execute arbitrary shell commands and therefore poses a particular security risk. For this reason, `ShellTool` supports [granular command restrictions](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/shell.md#command-restrictions). 
+- For example, to enable only `git` to be executed, replace `"coreTools": ["ShellTool"]` with `"coreTools": ["run_shell_command(git)"]` in `settings.json`. Although you can use `run_shell_command` in `excludeTools` as well, this is [not recommended](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/shell.md#security-note-for-excludetools) for security reasons.
+- Although restricting the commands `ShellTool` can execute via `run_shell_command` provides a measure of security, it is nevertheless a good idea to enable Sandboxing whenever `ShellTool` is available.
 
 ## Sandboxing
-- When sandboxing is enabled, Gemini CLI will only be able to use tools supported by the sandbox environment, regardless of what tools are available to it.
-- Sandboxing is off by default. Add `"sandbox": true` to `~/.gemini/settings.json` to turn it on. 
-- The default sandboxing methodology is platform-specific: Seatbelt on the Mac and Docker elsewhere. You can explicitly set `"sandbox"` to `"docker"`, `"sandbox-exec"` (Mac only) or `"podman"` to override that.
-- On a Mac, `export SEATBELT_PROFILE="<profile>"` in `~/.gemini/.env` to pick your Seatbelt profile. The [built-in profiles](https://github.com/google-gemini/gemini-cli/blob/main/docs/sandbox.md#macos-seatbelt-profiles) are `{permissive, restrictive}-{open, proxied, closed}`. The default is `permissive-open`, which restricts writes outside the project directory but allows most other operations. 
+- Sandboxing is _off_ by default. Add `"sandbox": true` to `~/.gemini/settings.json` to turn it on.
+- When sandboxing is enabled, Gemini CLI will only be able to use tools supported by the sandbox environment, regardless of what tools are included via `coreTools` and `excludeTools` in `settings.json`.
+- The default sandboxing methodology is platform-specific: Seatbelt on the Mac and Docker elsewhere.
+- On a Mac, `export SEATBELT_PROFILE="<profile>"` in `~/.gemini/.env` to select your Seatbelt profile when using `sandbox-exec`. The [built-in profiles](https://github.com/google-gemini/gemini-cli/blob/main/docs/sandbox.md#macos-seatbelt-profiles) are `{permissive, restrictive}-{open, proxied, closed}`. The default is `permissive-open`, which restricts writes outside the project directory but allows most other operations. 
 - `export SEATBELT_PROFILE="custom"` in `.gemini/.env` to use custom Seatbelt profiles stored in `.gemini/sandbox-macos-custom.sb`. You can start by copying one of the built-in profiles, which live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/cli/src/utils) and follow the naming schema `sandbox-macos-<profile-name>.sb` (e.g. [`sandbox-macos-permissive-open.sb`](https://github.com/google-gemini/gemini-cli/blob/main/packages/cli/src/utils/sandbox-macos-permissive-open.sb) for `permissive-open` and [`sandbox-macos-permissive-closed.sb`](https://github.com/google-gemini/gemini-cli/blob/main/packages/cli/src/utils/sandbox-macos-restrictive-closed.sb) for `permissive-closed`).
 - Note that "custom" is just a tag. If you set `SEATBELT_PROFILE` to `"custom"` in `~/.gemini/.env` every project where `~/.gemini/.env` isn't shadowed will need to have a `.gemini/sandbox-macoas-custom.sb`, but they can be completely different from each other (i.e. a copy of `sandbox-macos-permissive-closed.sb` rather than `sandbox-macos-permissive-open.sb`).
 - See [this page](https://github.com/s7ephen/OSX-Sandbox--Seatbelt--Profiles?tab=readme-ov-file) for more info about creating custom Seatbelt profiles. They are written in a language called SBPL (SandBox Profile Language), which is a Scheme-based embedded DSL. The [Apple Sandbox Guide](https://reverse.put.as/wp-content/uploads/2011/09/Apple-Sandbox-Guide-v1.0.pdf) has the details.
+- Adding `"sandbox": true"` to `settings.json` is the equivalent of running `gemini --sandbox`, since the `--sandbox` command-line argument is a boolean flag. Alternatively, you can explicitly set `"sandbox"` to one of the supported methdologies: `"docker"`, `"sandbox-exec"` (Mac only) or `"podman"`.
+- In particular, you can use Docker-based sandboxing on the Mac by specifying `"sandbox: "docker"` in `settings.json`. You will need Docker Desktop for the Mac to be [installed and running](https://docs.docker.com/desktop/setup/install/mac-install/) for this to work properly.
+- Similar to custom Seatbelt profiles, you can create a project-specific custom Dockerfile in `myproject/.gemini/sandbox.Dockerfile`, [as described here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#sandboxing). 
+- Per the docs, you should be able to add `export BUILD_SANDBOX=1` to `myproject/.gemini/.env` in order to have `gemini` automatically build the custom Docker image. 
+- When I tried this on a Mac, though (with Gemini CLI installed via `brew install gemini-cli`), I got the following error:
+```
+ERROR: cannot build sandbox using installed gemini binary; run `npm link ./packages/cli` under gemini-cli repo to switch to linked binary.
+```
+While I do have the `gemini-cli` repo checked out locally, I haven't tried giving this a go. This is apparently a [known issue](https://github.com/google-gemini/gemini-cli/issues/3404).
 
 ## Instructional Context ("Memory")
-- Gemini CLI calls the system prompt "instructional context" or "memory". 
+- Gemini CLI calls the system prompt "instructional context" or "memory". It's loaded from files named `GEMINI.md` (the name can be changed via the `contextFileName` setting in `settings.json`, if desired).
+- Context loaded from `GEMINI.md` files will reduce the number of tokens available in the context window, but this should not be an issue for models like Gemini 2.5 Pro where the size of the window is 1 million tokens.
 - Store user-level context in `~/.gemini/GEMINI.md`. You can add to it dynamically using the `/memory add` REPL command.
 - Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). See, e.g. Gemini CLI's [own GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md). 
 - Project-specific context will be merged with user-level context. Use the `/memory show` REPL command to see the overall, merged context.
 - Context can be controlled in a more granular way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining exactly which ones are included. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
-- Context loaded from `GEMINI.md` files will consume tokens available in the context window. However, given that the size if 1 million tokens for Gemini 2.5 Pro, this generally should not be an issue.
 
 ## An Illustrative Example
 Say that you are on a Mac and didn't set any Gemini CLI-related environment variables in `~/.zshrc` or `~/.bashrc`. Assume that your user-level Gemini CLI configuration looks like this:
@@ -125,7 +153,7 @@ Now suppose that you have a project called `myproject`, configured like this:
 ```
 {
   "selectedAuthType": "oauth-personal",
-  "coreTools": ["LSTool"]
+  "excludeTools": ["ShellTool"]
 }
 ```
 `myproject/.gemini/.env`:
@@ -158,7 +186,7 @@ export SEATBELT_PROFILE="custom" # {permissive, restrictive}-{open, proxied, clo
   - Since there is no need for an API key, commenting out `GEMINI_API_KEY` in `~/.gemini/.env` has no effect.
   - The Seatbelt profile used will be `myproject/.gemini/sandbox-macos-custom.sb`, as per `myproject/.gemini/.env`.
   - Irrespective of what `~/.gemini/.env` says, the model will be Gemini 2.5 Flash Pro (the default), even though you didn't specify `GEMINI_MODEL` in `myproject/.gemini/.env`.
-  - The only available tool will be LSTool, per `myproject/.gemini/settings.json`. Run the `/tools` REPL command to confirm (it shows up as "ReadFolder").
+  - `ShellTool` won't be available, per `myproject/.gemini/settings.json`. Run the `/tools` REPL command to confirm that `"Shell"` does not appear.
   - The instructional context will be a combination of user-level context from `~/.gemini/GEMINI.md`, project-specific context from `myproject/GEMINI.md` and  module-specific context from `myproject/some_module/GEMINI.md`. Run the `/memory show` REPL command to confirm. 
   - Since command-line argument take precedence over `settings.json` and `.env` files, even after you `cd myproject` you can still turn off sandboxing via `gemini --sandbox false` or explicitly select a different model via `gemini --model gemini-2.0-pro`.
 
