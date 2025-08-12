@@ -117,13 +117,13 @@ then `/tools` won't show `GoogleSearch`, `Shell` and `WebFetch`, whereas the res
 ```
 ERROR: cannot build sandbox using installed gemini binary; run `npm link ./packages/cli` under gemini-cli repo to switch to linked binary.
 ```
-While I do have the `gemini-cli` repo checked out locally, I haven't tried giving this a go. This is apparently a [known issue](https://github.com/google-gemini/gemini-cli/issues/3404).
+This is apparently [a known issue](https://github.com/google-gemini/gemini-cli/issues/3404).
 
 ## Instructional Context ("Memory")
-- Gemini CLI calls the system prompt "instructional context" or "memory". It's loaded from files named `GEMINI.md` (the name can be changed via the `contextFileName` setting in `settings.json`, if desired).
-- Context loaded from `GEMINI.md` files will reduce the number of tokens available in the context window, but this should not be an issue for models like Gemini 2.5 Pro where the size of the window is 1 million tokens.
+- Gemini CLI loads instructional context (aka "memory") from files named `GEMINI.md` (the name can be changed via the `contextFileName` setting in `settings.json`).
+- Context loaded from `GEMINI.md` files uses up context window tokens, but this should not be material for Gemini 2.5 Pro, whose context window is large (1 million tokens).
 - Store user-level context in `~/.gemini/GEMINI.md`. You can add to it dynamically using the `/memory add` REPL command.
-- Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). See, e.g. Gemini CLI's [own GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md). 
+- Store `myproject`-specific context in `myproject/GEMINI.md` (_not_ `myproject/.gemini/GEMINI.md`). In other words, put in the same kind of places where `README.md` might go. For a sample `GEMINI.md` file, have a look at Gemini CLI's [own](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md). 
 - Project-specific context will be merged with user-level context. Use the `/memory show` REPL command to see the overall, merged context.
 - Context can be controlled in a more granular way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining exactly which ones are included. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
 
