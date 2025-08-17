@@ -30,23 +30,33 @@ categories: linear_algebra linux cryptography random_oracle_model
 - Hyun's "median" approach
 - Finance context: Hagan-West
 
+# Different kind of random graphs
+
 # Clever little programs and other useful terminal tricks
-- The GOATs:
+- The Classics:
     - `cut -d, -f1-5,10 file.txt`
-    - `awk -F, '{print $1 " -> " $NF}'`
-    - `xargs`
     - `find . -type f -name '*.py | xargs grep foo`
-    - `sed s/foo/bar/ file.txt`
-    - `tree -d -L 3`
-    - `cal -3`
+    - `top`
+    - `uptime`
     - `date`
     - `sort`
     - `head`
     - `tail`
+    - `file`
+    - `wc`
+    - `strace`
+- Also worth knowing about
+    - `sed s/foo/bar/ file.txt`
+    - `awk -F, '{print $1 " -> " $NF}'`
+    - `tree -d -L 3`
+    - `cal -3`
     - `vimdiff`
     - `watch`
-    - `file`
+    - `strings`
+    - `objdump -t`
+    - `od`
 - The New Kids on the Block:
+    - `shellcheck`
     - `rg`
     - `jq`
     - `glow` (with Dracula!)
