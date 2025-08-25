@@ -17,6 +17,7 @@ categories: linear_algebra linux cryptography random_oracle_model
 
 # Matrix decompositions refresher
 - LU and how it relates to solving systems of linear equations / matrix inversion, Gaussian elimination, determinants, LUP
+- Cholesky and how it relates to LU
 - QR and how it relates to solving least squares problems and normal equations, pseudoinverse, Gram-Schmidt
 - SVD and its many uses, including PCA, singular values VS eigenvalues 
 - Why they are important and how to compute them in an efficient (and numerically stable!) way. Also mention the relevance of how easily an algorithm can be parallelized
