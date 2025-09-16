@@ -136,4 +136,4 @@ iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 - You can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not compilation is enabled.
 - CPU+GPU+ANE is stable at 100% without compilation. With compilation, it generally hovers around 100% though drops slightly below that at times.
 - I didn't run CPU training to completion, since it would take too long for a model of this size. It's only there for comparison purposes.
-- If you look at iterations 10-50, the average time is about 221ms without compilation, 306ms with compilation and 1986ms on the CPU 
+- If you look at iterations 10-50, the average time is about 221ms without compilation, 306ms with compilation and 1986ms on the CPU.
