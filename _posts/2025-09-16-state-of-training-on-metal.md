@@ -10,14 +10,14 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 
 ## TL;DR
 
-- Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training nanoGPT on Metal.
+- Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training nanoGPT on [Metal](https://developer.apple.com/documentation/MetalPerformanceShaders).
 - However &mdash; on my Macbook, at least &mdash; training on Metal is significantly slower with [`torch.compile`](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html) than without it (though still faster than training on the CPU). I find this surprising.
 - For the time being, if you want first-class Metal support for training models from scratch, [MLX](https://github.com/ml-explore/mlx) (Apple Silicon-only) and [tinygrad](https://github.com/tinygrad/tinygrad) (cross-platform) seem to be your best options.
 
 ## Background
 
 - Apple Silicon's unified memory architecture makes the Mac a [potentially attractive platform](https://arxiv.org/pdf/2501.14925) for ML researchers, particularly when it comes to models too large to fit into VRAM on a single consumer NVIDIA card.
-- To take advantage of this, though, you need an ML framework with good Metal (MPS) support, ideally with JIT compilation. A Metal backend was [first added to PyTorch](https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/) back in 2022. While much progress has been made since then, MPS Ops coverage is [still incomplete](https://qqaatw.dev/pytorch-mps-ops-coverage/).
+- To take advantage of this, though, you need an ML framework with good [Metal (MPS)](https://developer.apple.com/documentation/MetalPerformanceShaders) support, ideally with JIT compilation. A Metal backend was [first added to PyTorch](https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/) back in 2022. While much progress has been made since then, MPS Ops coverage is [still incomplete](https://qqaatw.dev/pytorch-mps-ops-coverage/).
   - For example, if you try to run `torch.svd` on MPS, you get an error like this: "The operator `aten::linalg_svd` is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications.".
   - As of now, [over 70 ops](https://github.com/users/kulinseth/projects/1/views/1) are tagged with either "To triage" or "To be implemented".
   - There is [a Github issue](https://github.com/pytorch/pytorch/issues/77764) you can comment on to drive prioritization.
