@@ -17,7 +17,8 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 ## Background
 
 - Apple Silicon's unified memory architecture makes the Mac a [potentially attractive platform](https://arxiv.org/pdf/2501.14925) for ML researchers, particularly when it comes to models too large to fit into VRAM on a single consumer NVIDIA card.
-- To take advantage of this, though, you need an ML framework with good [Metal (MPS)](https://developer.apple.com/documentation/MetalPerformanceShaders) support, ideally with JIT compilation. A Metal backend was [first added to PyTorch](https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/) back in 2022. While much progress has been made since then, MPS Ops coverage is [still incomplete](https://qqaatw.dev/pytorch-mps-ops-coverage/).
+- To take advantage of this, though, you need an ML framework with good [Metal (MPS)](https://developer.apple.com/documentation/MetalPerformanceShaders) support, ideally one capable of fusing kernels and optimizing memory loads through JIT compilation (or in some other way).
+- A Metal backend was [first added to PyTorch](https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/) back in 2022. While much progress has been made since then, MPS Ops coverage is [still incomplete](https://qqaatw.dev/pytorch-mps-ops-coverage/).
   - For example, if you try to run `torch.svd` on MPS, you get an error like this: "The operator `aten::linalg_svd` is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications.".
   - As of now, [over 70 ops](https://github.com/users/kulinseth/projects/1/views/1) are tagged with either "To triage" or "To be implemented".
   - There is [a Github issue](https://github.com/pytorch/pytorch/issues/77764) you can comment on to drive prioritization.
