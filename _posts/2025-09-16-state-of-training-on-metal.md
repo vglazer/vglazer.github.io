@@ -20,7 +20,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 - To take advantage of this, though, you need an ML framework with good Metal (MPS) support, ideally with JIT compilation. A Metal backend was [first added to PyTorch](https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/) back in 2022. While much progress has been made since then, MPS Ops coverage is [still incomplete](https://qqaatw.dev/pytorch-mps-ops-coverage/).
   - For example, if you try to run `torch.svd` on MPS, you get an error like this: "The operator `aten::linalg_svd` is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications.".
   - As of now, [over 70 ops](https://github.com/users/kulinseth/projects/1/views/1) are tagged with either "To triage" or "To be implemented".
-  - There is [a Github issue](https://github.com/pytorch/pytorch/issues/77764) you can comment on to help with prioritization.
+  - There is [a Github issue](https://github.com/pytorch/pytorch/issues/77764) you can comment on to drive prioritization.
 - Apple has recently released its own ML framework, called [MLX](https://github.com/ml-explore/mlx), which supports not only MPS but also [Neural Engine (ANE)](https://en.wikipedia.org/wiki/Neural_Engine).
   - Unlike [Core ML](https://developer.apple.com/documentation/coreml), MLX is intended for training as well as inference.
   - However, there are no tools for automatically converting PyTorch (or JAX) models to MLX the way you can covert models to Core ML with [coremltools](https://github.com/apple/coremltools). Doing so manually, while certainly possible, is [non-trivial](https://github.com/pranavjad/mlx-gpt2).
