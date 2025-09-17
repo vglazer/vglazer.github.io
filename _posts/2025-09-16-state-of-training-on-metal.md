@@ -49,7 +49,7 @@ This assumes you have [uv](https://docs.astral.sh/uv/) installed:
 - `uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
 - `uv run data/shakespeare_char/prepare.py`
 
-### Metal training without compilation
+### Metal training without torch.compile
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
@@ -72,7 +72,7 @@ iter 5000: loss 0.8117, time 33010.34ms, mfu 1.19%
      3588.66 real        90.18 user        32.03 sys
 ```
 
-### Metal training with compilation
+### Metal training with torch.compile
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
