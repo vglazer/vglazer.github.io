@@ -12,6 +12,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 
 - Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training nanoGPT on Metal.
 - However &mdash; on my Macbook, at least &mdash; training on Metal is significantly slower with `torch.compile` than without (though still faster than training on the CPU). I find this surprising.
+- For the time being, it seems that if you want first-class Metal support for training, including jit compilation, MLX and tinygrad are your best options.
 
 ## Background
 
@@ -24,8 +25,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
   - Unlike [Core ML](https://developer.apple.com/documentation/coreml), MLX is intended for training as well as inference.
   - However, there are no tools for automatically converting PyTorch (or JAX) models to MLX the way you can covert models to Core ML with [coremltools](https://github.com/apple/coremltools). Doing so manually, while certainly possible, is [non-trivial](https://github.com/pranavjad/mlx-gpt2).
 - [JAX](https://github.com/jax-ml/jax) has historically prioritized TPUs when it comes to non-NVIDIA accelerators, which makes sense given its Google lineage. While support for MPS in JAX is [in the works](https://developer.apple.com/metal/jax/), it's [still experimental](https://github.com/jax-ml/jax?tab=readme-ov-file#supported-platforms) at this point.
-- Then there's[tinygrad](https://github.com/tinygrad/tinygrad), which aims to provide first-class support for MPS out of the box. However, as with MLX, there is no way to automatically convert PyTorch models to tinygrad. A number of popular models [have been ported](https://github.com/tinygrad/tinygrad/tree/master/examples), though.
-- Given its relative dominance, then, it would be good to get a sense of how well PyTorch supports training on Metal these days.
+- Then there's[tinygrad](https://github.com/tinygrad/tinygrad), which aims to provide first-class support for MPS out of the box. However, as with MLX, there is no way to automatically convert PyTorch models to tinygrad. A number of popular models [have been ported](https://docs.tinygrad.org/showcase/), though.
 
 ## nanoGPT as a benchmark
 
