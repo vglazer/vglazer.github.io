@@ -23,7 +23,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
   - As of now, [over 70 ops](https://github.com/users/kulinseth/projects/1/views/1) are tagged with either "To triage" or "To be implemented".
   - There is [a Github issue](https://github.com/pytorch/pytorch/issues/77764) you can comment on to drive prioritization.
 - Apple has recently released its own ML framework, called [MLX](https://github.com/ml-explore/mlx), which supports not only MPS but also [Neural Engine (ANE)](https://en.wikipedia.org/wiki/Neural_Engine).
-  - Unlike [Core ML](https://developer.apple.com/documentation/coreml), which is primary geared towards inference and fine-tuning, MLX is intended for training models from scratch in a flexible way.
+  - Unlike [Core ML](https://developer.apple.com/documentation/coreml), which is primary geared towards inference and fine-tuning, MLX is intended for training models from scratch in a flexible way, similar to PyTorch or JAX.
   - There are no tools for automatically converting PyTorch (or JAX) models to MLX the way you can covert models to Core ML with [coremltools](https://github.com/apple/coremltools), though.
   - You can certainly port the training loop manually, but it's [non-trivial](https://github.com/pranavjad/mlx-gpt2). When I tried to get Gemini CLI to port nanoGPT to MLX it kept  getting stuck, even after much prodding.
 - [JAX](https://github.com/jax-ml/jax) has historically prioritized TPUs when it comes to non-NVIDIA accelerators, which makes sense given its Google lineage. While support for MPS in JAX is [in the works](https://developer.apple.com/metal/jax/), it's [still experimental](https://github.com/jax-ml/jax?tab=readme-ov-file#supported-platforms) at this point.
