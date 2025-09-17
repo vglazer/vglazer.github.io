@@ -12,7 +12,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 
 - Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training nanoGPT on Metal.
 - However &mdash; on my Macbook, at least &mdash; training on Metal is significantly slower with [`torch.compile`](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html) than without, though still faster than training on the CPU. I find this surprising.
-- For the time being, it seems that if you want first-class Metal support for training, including jit compilation, [MLX](https://github.com/ml-explore/mlx) (Apple Silicon-only) and [tinygrad](https://github.com/tinygrad/tinygrad) (cross-platform) are your best options.
+- For the time being, it seems that if you want first-class Metal support for training [MLX](https://github.com/ml-explore/mlx) (Apple Silicon-only) and [tinygrad](https://github.com/tinygrad/tinygrad) (cross-platform) are your best options.
 
 ## Background
 
