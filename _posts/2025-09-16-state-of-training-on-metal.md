@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "State of PyTorch Metal support"
-date:   2025-09-02 15:00:00
-permalink: pytorch-metal-support
-categories: metal pytorch llms nanogpt jit osx mlx
+title:  "State of training on Metal"
+date:   2025-09-16 22:00:00
+permalink: training-on-metal
+categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 ---
 
-![ML Training On Metal](/assets/MLTrainingOnMetal.png)
+![Training On Metal](/assets/MLTrainingOnMetal.png)
 
 ## TL;DR
 
