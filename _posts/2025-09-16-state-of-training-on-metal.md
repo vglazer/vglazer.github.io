@@ -49,7 +49,7 @@ This assumes you have [uv](https://docs.astral.sh/uv/) installed:
 - `uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
 - `uv run data/shakespeare_char/prepare.py`
 
-### Metal training without torch.compile
+### Metal training without `torch.compile`
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
@@ -72,7 +72,7 @@ iter 5000: loss 0.8117, time 33010.34ms, mfu 1.19%
      3588.66 real        90.18 user        32.03 sys
 ```
 
-### Metal training with torch.compile
+### Metal training with `torch.compile`
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
@@ -111,9 +111,9 @@ iter 40: loss 2.5535, time 1983.75ms, mfu 0.19%
 iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 ```
 
-### Observations
+### Notes and Observations
 
-- You can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not compilation is enabled.
-- CPU+GPU+ANE is stable at 100% without compilation. With compilation, it generally hovers around 100% though drops slightly below that at times.
-- I didn't run CPU training to completion, since it would take too long for a model of this size. It's only there for comparison purposes.
-- If you look at iterations 10-50, the average time is about 221ms without compilation, 306ms with compilation and 1986ms on the CPU.
+- I didn't run CPU training to completion, but training on Metal without `torch.compile` is roughly 9 times faster than training on the CPU based on the 1st 50 iterations (221ms vs 1986ms).
+- With `torch.compile`, it's only 6.5 times faster (306ms). In order words, turning on `torch.compile` slows training down by a factor of 1.38.
+- You can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not `torch.compile` is used.
+- CPU+GPU+ANE is stable at 100% without `torch.compile`. With `torch.compile`, it drops slightly below that at times.
