@@ -12,7 +12,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 
 - Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training nanoGPT on Metal.
 - However &mdash; on my Macbook, at least &mdash; training on Metal is significantly slower with [`torch.compile`](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html) than without, though still faster than training on the CPU. I find this surprising.
-- For the time being, it seems that if you want first-class Metal support for training [MLX](https://github.com/ml-explore/mlx) (Apple Silicon-only) and [tinygrad](https://github.com/tinygrad/tinygrad) (cross-platform) are your best options.
+- For the time being, if you want first-class Metal support for training models from scratch [MLX](https://github.com/ml-explore/mlx) (Apple Silicon-only) and [tinygrad](https://github.com/tinygrad/tinygrad) (cross-platform) are your best options.
 
 ## Background
 
@@ -22,8 +22,9 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
   - As of now, [over 70 ops](https://github.com/users/kulinseth/projects/1/views/1) are tagged with either "To triage" or "To be implemented".
   - There is [a Github issue](https://github.com/pytorch/pytorch/issues/77764) you can comment on to drive prioritization.
 - Apple has recently released its own ML framework, called [MLX](https://github.com/ml-explore/mlx), which supports not only MPS but also [Neural Engine (ANE)](https://en.wikipedia.org/wiki/Neural_Engine).
-  - Unlike [Core ML](https://developer.apple.com/documentation/coreml), MLX is intended for training as well as inference.
-  - However, there are no tools for automatically converting PyTorch (or JAX) models to MLX the way you can covert models to Core ML with [coremltools](https://github.com/apple/coremltools). Doing so manually, while certainly possible, is [non-trivial](https://github.com/pranavjad/mlx-gpt2).
+  - Unlike [Core ML](https://developer.apple.com/documentation/coreml), MLX is intended for training models from scratch and not just for inference and fine-tuning.
+  - There are no tools for automatically converting PyTorch (or JAX) models to MLX the way you can covert models to Core ML with [coremltools](https://github.com/apple/coremltools).  
+  - You can certainly port the training loop manually, but it's [non-trivial](https://github.com/pranavjad/mlx-gpt2).
 - [JAX](https://github.com/jax-ml/jax) has historically prioritized TPUs when it comes to non-NVIDIA accelerators, which makes sense given its Google lineage. While support for MPS in JAX is [in the works](https://developer.apple.com/metal/jax/), it's [still experimental](https://github.com/jax-ml/jax?tab=readme-ov-file#supported-platforms) at this point.
 - Then there's [tinygrad](https://github.com/tinygrad/tinygrad), which aims to provide first-class support for MPS out of the box. However, as with MLX, there is no way to automatically convert PyTorch models to tinygrad. A number of popular models [have been ported](https://docs.tinygrad.org/showcase/), though. You can see what training looks like [here](https://docs.tinygrad.org/mnist/#training-the-model).
 
