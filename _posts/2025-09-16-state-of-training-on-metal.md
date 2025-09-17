@@ -111,7 +111,7 @@ iter 40: loss 2.5535, time 1983.75ms, mfu 0.19%
 iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 ```
 
-### Notes and Observations
+### Observations
 
 - I didn't run CPU training to completion, but training on Metal without `torch.compile` is roughly 9 times faster than training on the CPU based on the 1st 50 iterations (221ms vs 1986ms).
 - With `torch.compile`, it's only 6.5 times faster (306ms). In order words, turning on `torch.compile` slows training down by a factor of 1.38.
