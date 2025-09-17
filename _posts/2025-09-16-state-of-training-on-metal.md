@@ -36,7 +36,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 - When nanoGPT was first released (in 2022), MPS support in PyTorch was still nascent. Training on the Mac was limited to the CPU in practice, so much so that the [quick start section](https://github.com/karpathy/nanoGPT?tab=readme-ov-file#quick-start) of README.md branched on "I have a GPU" vs "I only have a macbook".
 - This have steadily improved over time, though, as evidenced by [this github issue](https://github.com/karpathy/nanoGPT/issues/28).
 
-## Training nanoGPT on Metal
+## Training nanoGPT on the Mac
 
 ### Setup
 
@@ -49,7 +49,7 @@ This assumes you have [uv](https://docs.astral.sh/uv/) installed:
 - `uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
 - `uv run data/shakespeare_char/prepare.py`
 
-### Training (MPS, without compilation)
+### Metal training without compilation
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
@@ -72,7 +72,7 @@ iter 5000: loss 0.8117, time 33010.34ms, mfu 1.19%
      3588.66 real        90.18 user        32.03 sys
 ```
 
-### Training (MPS, with compilation)
+### Metal training with compilation
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
@@ -95,7 +95,7 @@ iter 5000: loss 0.8242, time 1255915.73ms, mfu 1.00%
     39039.74 real        72.21 user        21.28 sys
 ```
 
-### Training (CPU, no compilation)
+### CPU training
 
 ```
 uv run train.py config/train_shakespeare_char.py --device=cpu --compile=False
