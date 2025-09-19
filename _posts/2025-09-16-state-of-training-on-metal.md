@@ -51,7 +51,7 @@ This assumes you have [uv](https://docs.astral.sh/uv/) installed:
 - `uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
 - `uv run data/shakespeare_char/prepare.py`
 
-### MPS training without `torch.compile`
+### MPS training, without `torch.compile`
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
@@ -74,7 +74,7 @@ iter 5000: loss 0.8117, time 33010.34ms, mfu 1.19%
      3588.66 real        90.18 user        32.03 sys
 ```
 
-### MPS training with `torch.compile`
+### MPS training, with `torch.compile`
 
 ```
 /usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
@@ -113,7 +113,7 @@ iter 40: loss 2.5535, time 1983.75ms, mfu 0.19%
 iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 ```
 
-### Observations
+### Some Observations
 
 - I didn't run CPU training to completion, but training on Metal without `torch.compile` is roughly 9 times faster than training on the CPU based on the 1st 50 iterations (221ms vs 1986ms).
 - With `torch.compile`, it's only 6.5 times faster (306ms). In order words, turning on `torch.compile` slows training down by a factor of 1.38.
