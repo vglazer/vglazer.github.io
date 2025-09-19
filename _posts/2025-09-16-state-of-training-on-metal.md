@@ -44,12 +44,14 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 
 This assumes you have [uv](https://docs.astral.sh/uv/) installed:
 
-- `git clone https://github.com/karpathy/nanoGPT.git`
-- `cd nanoGPT`
-- `uv venv`
-- `uv pip install numpy transformers datasets tiktoken wandb tqdm`
-- `uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`
-- `uv run data/shakespeare_char/prepare.py`
+```
+git clone https://github.com/karpathy/nanoGPT.git
+cd nanoGPT
+uv venv
+uv pip install numpy transformers datasets tiktoken wandb tqdm
+uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
+uv run data/shakespeare_char/prepare.py
+```
 
 ### MPS training, without `torch.compile`
 
