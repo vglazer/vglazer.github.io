@@ -36,7 +36,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 - There are two main scripts, [`train.py`](https://github.com/karpathy/nanoGPT/blob/master/train.py) for training and [`sample.py`](https://github.com/karpathy/nanoGPT/blob/master/sample.py) for inference.
 - The default is to use NVIDIA GPUs and JIT-compile the model into optimized kernels via [`torch.compile`](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html), but you can override this using the `--device` and `--compile` command-line switches, respectively.
 - When nanoGPT was first released in 2022, MPS support in PyTorch was still nascent. Training on the Mac was limited to the CPU in practice, so much so that the [quick start section](https://github.com/karpathy/nanoGPT?tab=readme-ov-file#quick-start) branched on "I have a GPU" vs "I only have a macbook".
-- This have steadily improved over time, though, as evidenced by [this github issue](https://github.com/karpathy/nanoGPT/issues/28).
+- Things have improved a lot since then, though, as you can see from [this github issue](https://github.com/karpathy/nanoGPT/issues/28).
 
 ## Training nanoGPT on the Mac
 
