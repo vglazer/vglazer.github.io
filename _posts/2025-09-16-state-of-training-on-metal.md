@@ -54,7 +54,7 @@ This assumes you have [uv](https://docs.astral.sh/uv/) installed:
 ### MPS training, without `torch.compile`
 
 ```
-/usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
+uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
 
 ...
 
@@ -71,13 +71,12 @@ iter 50: loss 2.5239, time 220.24ms, mfu 1.69%
 iter 4990: loss 0.8203, time 276.23ms, mfu 1.33%
 step 5000: train loss 0.6166, val loss 1.7099
 iter 5000: loss 0.8117, time 33010.34ms, mfu 1.19%
-     3588.66 real        90.18 user        32.03 sys
 ```
 
 ### MPS training, with `torch.compile`
 
 ```
-/usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
+uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
 
 ...
 
@@ -94,7 +93,6 @@ iter 50: loss 2.5479, time 305.41ms, mfu 1.22%
 iter 4990: loss 0.8286, time 329.89ms, mfu 1.11%
 step 5000: train loss 0.6221, val loss 1.7106
 iter 5000: loss 0.8242, time 1255915.73ms, mfu 1.00%
-    39039.74 real        72.21 user        21.28 sys
 ```
 
 ### CPU training
