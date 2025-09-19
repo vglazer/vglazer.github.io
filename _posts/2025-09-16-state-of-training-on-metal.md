@@ -10,7 +10,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 
 ## TL;DR
 
-- Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training nanoGPT on [Metal](https://developer.apple.com/documentation/MetalPerformanceShaders).
+- Using the nightly pytorch build, I am no longer getting CPU fallback warnings due to missing kernels when training [nanoGPT](https://github.com/karpathy/nanoGPT) on [Metal](https://developer.apple.com/documentation/MetalPerformanceShaders).
 - However &mdash; on my Macbook, at least &mdash; training on Metal is significantly slower with [`torch.compile`](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html) than without it (though still faster than training on the CPU).
 
 ## Background
