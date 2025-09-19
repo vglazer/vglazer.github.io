@@ -56,7 +56,7 @@ uv run data/shakespeare_char/prepare.py
 ### MPS training, without `torch.compile`
 
 ```
-uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
+/usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=False
 
 ...
 
@@ -102,7 +102,7 @@ iter 5000: loss 0.8242, time 1255915.73ms, mfu 1.00%
 ### CPU training
 
 ```
-/usr/bin/time uv run train.py config/train_shakespeare_char.py --device=cpu --compile=False
+uv run train.py config/train_shakespeare_char.py --device=cpu --compile=False
 
 ...
 
