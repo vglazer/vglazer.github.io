@@ -28,7 +28,7 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 - [JAX](https://github.com/jax-ml/jax) has historically prioritized TPUs when it comes to accelerators, which makes sense given its Google lineage. While support for MPS in JAX is [in the works](https://developer.apple.com/metal/jax/), it's [still experimental](https://github.com/jax-ml/jax?tab=readme-ov-file#supported-platforms) at this point.
 - Then there's [tinygrad](https://github.com/tinygrad/tinygrad), which aims to provide first-class support for MPS out of the box. 
   - As with MLX, there is no way to automatically convert PyTorch models to tinygrad. 
-  - A number of popular models [have been ported](https://docs.tinygrad.org/showcase/), though. Here is what [the training loop](https://docs.tinygrad.org/mnist/#training-the-model) looks like.
+  - A number of popular models [have been ported](https://docs.tinygrad.org/showcase/), though. Here is what [the training loop](https://docs.tinygrad.org/mnist/#putting-it-together) looks like.
 
 ## nanoGPT as a training benchmark
 
