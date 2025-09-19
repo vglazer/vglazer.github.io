@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "State of training on Metal"
-date:   2025-09-16 22:00:00
+date:   2025-09-19 18:00:00
 permalink: training-on-metal
 categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
 ---
