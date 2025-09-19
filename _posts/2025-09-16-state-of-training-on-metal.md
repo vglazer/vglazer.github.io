@@ -73,12 +73,13 @@ iter 50: loss 2.5239, time 220.24ms, mfu 1.69%
 iter 4990: loss 0.8203, time 276.23ms, mfu 1.33%
 step 5000: train loss 0.6166, val loss 1.7099
 iter 5000: loss 0.8117, time 33010.34ms, mfu 1.19%
+     3588.66 real        90.18 user        32.03 sys
 ```
 
 ### MPS training, with `torch.compile`
 
 ```
-uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
+/usr/bin/time uv run train.py config/train_shakespeare_char.py --device=mps --compile=True
 
 ...
 
@@ -95,12 +96,13 @@ iter 50: loss 2.5479, time 305.41ms, mfu 1.22%
 iter 4990: loss 0.8286, time 329.89ms, mfu 1.11%
 step 5000: train loss 0.6221, val loss 1.7106
 iter 5000: loss 0.8242, time 1255915.73ms, mfu 1.00%
+    39039.74 real        72.21 user        21.28 sys
 ```
 
 ### CPU training
 
 ```
-uv run train.py config/train_shakespeare_char.py --device=cpu --compile=False
+/usr/bin/time uv run train.py config/train_shakespeare_char.py --device=cpu --compile=False
 
 ...
 
@@ -115,6 +117,7 @@ iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 
 ### Some Observations
 
-- I didn't run CPU training to completion, but training on Metal without `torch.compile` is roughly 9 times faster than training on the CPU based on the 1st 50 iterations (221ms vs 1986ms).
-- With `torch.compile`, it's only 6.5 times faster (306ms). In other words, turning on `torch.compile` slows training down by a factor of 1.38.
-- You can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not `torch.compile` is used.
+- I didn't run CPU training to completion, but MPS training without `torch.compile` is almost an order of magnitude faster than CPU training based on the 1st 50 iterations (221ms vs 1986ms).
+- Something funny happens when you turn on `torch.compile`, though. First off, the individual iterations get about 1.4 times slower compared to MPS with no compilation (306ms vs 221ms). Moreover, the overall training run takes more than 10 times as long (almost 11 hours instead of an hour).
+- I'm not sure what's going on, but we might be silently falling back to the CPU due to missing kernels, or perhaps the auto-generated kernels are worse than the hand-tuned ones used without compilation. Either way, it seems that `torch.compile` isn't ready for prime time on MPS just yet.
+- At any rate, you can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not `torch.compile` is used.
