@@ -26,7 +26,9 @@ categories: metal jax pytorch llms nanogpt tinygrad mlx ane asitop
   - There are no tools for automatically converting PyTorch (or JAX) models to MLX the way you can covert models to Core ML with [coremltools](https://github.com/apple/coremltools), though.
   - You can certainly port the training loop from PyTorch to MLX manually, but it's [non-trivial](https://github.com/pranavjad/mlx-gpt2).
 - [JAX](https://github.com/jax-ml/jax) has historically prioritized TPUs when it comes to accelerators, which makes sense given its Google lineage. While support for MPS in JAX is [in the works](https://developer.apple.com/metal/jax/), it's [still experimental](https://github.com/jax-ml/jax?tab=readme-ov-file#supported-platforms) at this point.
-- Then there's [tinygrad](https://github.com/tinygrad/tinygrad), which aims to provide first-class support for MPS out of the box. However, as with MLX, there is no way to automatically convert PyTorch models to tinygrad. A number of popular models [have been ported](https://docs.tinygrad.org/showcase/), though. You can see what training looks like [here](https://docs.tinygrad.org/mnist/#training-the-model).
+- Then there's [tinygrad](https://github.com/tinygrad/tinygrad), which aims to provide first-class support for MPS out of the box. 
+  - As with MLX, there is no way to automatically convert PyTorch models to tinygrad. 
+  - A number of popular models [have been ported](https://docs.tinygrad.org/showcase/), though. Here is what [the training loop](https://docs.tinygrad.org/mnist/#training-the-model) looks like.
 
 ## nanoGPT as a training benchmark
 
