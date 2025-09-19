@@ -118,6 +118,6 @@ iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 ### Some Observations
 
 - Based on iterations 10-50, MPS training without `torch.compile` is almost an order of magnitude faster than CPU training (221ms vs 1986ms). This suggests that PyTorch support for MPS is quite mature.
-- Something funny happens when you turn on `torch.compile`, though. First off, the individual iterations get about 1.4 times slower compared to MPS with no compilation (306ms vs 221ms). Moreover, the overall training run takes more than 10 times as long (almost 11 hours instead of an hour).
+- Something funny happens when you turn on `torch.compile`, though. First off, the individual iterations get about 1.4 times slower compared to MPS with no compilation (306ms vs 221ms). Moreover, the overall training run takes more than 10 times as long (almost 11 hours instead of around an hour).
 - I'm not sure what's going on, but we might be silently falling back to the CPU due to missing kernels, or perhaps the auto-generated kernels are worse than the hand-tuned ones used without compilation. Either way, it seems that `torch.compile` isn't ready for prime time on MPS just yet.
 - At any rate, you can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not `torch.compile` is used.
