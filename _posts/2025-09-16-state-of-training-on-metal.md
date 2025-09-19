@@ -118,4 +118,3 @@ iter 50: loss 2.5237, time 2003.05ms, mfu 0.19%
 - I didn't run CPU training to completion, but training on Metal without `torch.compile` is roughly 9 times faster than training on the CPU based on the 1st 50 iterations (221ms vs 1986ms).
 - With `torch.compile`, it's only 6.5 times faster (306ms). In other words, turning on `torch.compile` slows training down by a factor of 1.38.
 - You can use [asitop](https://github.com/tlkh/asitop) to confirm that GPU usage is at 100% when training on MPS, whether or not `torch.compile` is used.
-- CPU+GPU+ANE is stable at 100% without `torch.compile`. With `torch.compile`, it drops slightly below that at times.
