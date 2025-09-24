@@ -7,6 +7,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 ---
 
 ## Background and Documentation
+
 - [Launch post](https://blog.google/technology/developers/introducing-gemini-cli-open-source-ai-agent/)
 - [gemini-cli GitHub repo](https://github.com/google-gemini/gemini-cli/)
 - [Documentation](https://github.com/google-gemini/gemini-cli/blob/main/docs/index.md)
@@ -18,6 +19,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
   - [Built-in Tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/index.md)
 
 ## Configuration Layers
+
 - User [settings](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#available-settings-in-settingsjson) are in `~/.gemini/settings.json`.
 - Project-specific `myproject/.gemini/settings.json` files _override_ `~/.gemini/settings.json`. You only need to specify settings whose user-level values you want to change.
 - API keys and some other settings are controlled via [environment variables](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#environment-variables--env-files). It is recommended to store them in `~/.gemini/.env` instead of adding them directly to `~/.zshrc` or `~/.bashrc`.
@@ -26,6 +28,7 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - In particular, the current working directory will affect which `settings.json`, `.env` and `GEMINI.md` files `gemini` picks up.
 
 ## Authentication, Request Limits and Privacy
+
 - The `"selectedAuthType"` setting determines how you [authenticate with Google's AI services](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md): `"oauth-personal"` (personal Google account), `"gemini-api-key`" ([AI Studio](https://aistudio.google.com/prompts/new_chat)) or `"vertex-ai"` ([Vertex AI](https://cloud.google.com/vertex-ai)).
 - You will be prompted to pick an auth type the first time you launch Gemini CLI, or more generally any time `"selectedAuthType"` isn't found in `settings.json`. You can also use the `/auth` REPL command to switch to a different auth type later. 
 - The auth type determines the model request limits as well as what data Google collects. See the [Terms of Service and Privacy Notice](https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md) for details. **Keep in mind that if you authenticate using your personal Google account or use the free Google AI tier, your code, prompts and responses will be used to train Google models**. 
@@ -38,11 +41,13 @@ categories: ai agents llms productiviy devtools osx gemini gemini-cli google
 - Anonymized usage stats, such what tools and models are used, are collected by default. Add `"usageStatisticsEnabled": false` to `~/.gemini/settings.json`" to [opt out](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#usage-statistics).
 
 ## Model Selection
+
 - You can use the `--model` command-line argument to override the default model (currently Gemini 2.5 Pro) like so: `gemini --model <model>`. 
 - Supported `<model>` values include `gemini-{2.5, 2.0}-{pro, flash, flash-lite}`.
 - You can also `export GEMINI_MODEL="<model>"` in `~/.gemini/.env` or another `.env` file.
 
 ## Built-in Tools
+
 - Gemini CLI comes with a number of [built-in tools](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#built-in-tools) with the following [execution flow](https://github.com/google-gemini/gemini-cli/blob/main/docs/core/tools-api.md#tool-execution-flow). Their definitions live [here](https://github.com/google-gemini/gemini-cli/tree/main/packages/core/src/tools).
 - You can extend the list of built-in tools using MCP Servers. See [this page](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md) for details.
 - Use the `/tools` REPL command to list the tools available in a given `gemini` session. For a longer description of each tool, run `/tools desc`.
@@ -103,6 +108,7 @@ then `/tools` won't show `GoogleSearch`, `Shell` and `WebFetch`, whereas the res
 - Although restricting the commands `ShellTool` can execute via `run_shell_command` does provide a measure of security, it is nevertheless a good idea to enable sandboxing if you are going to make `ShellTool` available (which it is by default, with no command restrictions).
 
 ## Sandboxing
+
 - Sandboxing is _off_ by default. Add `"sandbox": true` to `~/.gemini/settings.json` to turn it on.
 - When sandboxing is enabled, Gemini CLI will only be able to call tools supported by the sandbox environment, regardless of what tools are included via `coreTools` and `excludeTools` in `settings.json`.
 - The default sandboxing methodology is platform-specific: Seatbelt on a Mac and Docker elsewhere.
@@ -120,6 +126,7 @@ ERROR: cannot build sandbox using installed gemini binary; run `npm link ./packa
 This is apparently [a known issue](https://github.com/google-gemini/gemini-cli/issues/3404).
 
 ## Instructional Context ("Memory")
+
 - Gemini CLI loads instructional context (aka "memory") from files named `GEMINI.md` (the name can be changed via the `contextFileName` setting in `settings.json`).
 - For an example, have a look at Gemini CLI's [own GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md).
 - Context loaded from `GEMINI.md` files uses up context window tokens. This should not be material for Gemini 2.5 Pro, whose context window is large (1 million tokens).
@@ -129,6 +136,7 @@ This is apparently [a known issue](https://github.com/google-gemini/gemini-cli/i
 - Context can be controlled in hierarchical way using multiple `GEMINI.md` files, with the directory you launch `gemini` from determining which ones are loaded. The details are [here](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/configuration.md#context-files-hierarchical-instructional-context).
 
 ## An Illustrative Example
+
 Say that you are on a Mac and didn't set any Gemini CLI-related environment variables in `~/.zshrc` or `~/.bashrc`. Assume that your user-level Gemini CLI configuration looks like this:
 
 `~/.gemini/settings.json`:
@@ -195,7 +203,22 @@ export SEATBELT_PROFILE="custom" # {permissive, restrictive}-{open, proxied, clo
     - Turn off sandboxing via `gemini --sandbox false`
     - Explicitly select a different model via `gemini --model gemini-2.5-flash`.
 
+## VSCode Integration
+
+There is now a VSCode extension called [Gemini CLI Companion](https://marketplace.visualstudio.com/items?itemName=Google.gemini-cli-vscode-ide-companion), which lets Gemini CLI talk to VSCode for a [Cursor](https://cursor.com/)-like experience, albeit limited to Gemini models (this is separate from the existing [Gemini Code Assist](https://marketplace.visualstudio.com/items?itemName=Google.geminicodeassist) VSCode extension, which provides [GitHub Copilot](https://code.visualstudio.com/docs/copilot/overview)-style code completions). `gemini` will see what files you have open as well as what the current selection is, and the changes it proposes will be displayed directly in the editor. While integration is clunkier than Cursor overall, you get to use Microsoft's official extensions such as the C++ one.
+
+You can either install Gemini CLI Companion manually or launch `gemini` _from VSCode's built-in terminal_ and use the `/ide install` REPL command. You can then run the `/ide status` REPL command to confirm that `gemini` successfully connected to VSCode.
+
+At the moment (September 2025) there seems to be a known issue with sandboxing disrupting communication between Gemini CLI Companion and `gemini`. The official workaround, at least for now, is to turn sandboxing off completely. You can do this at the `myproject` level by creating `myproject/.gemini/settings.json` with the following content:
+
+```
+{
+  "sandbox": false
+}
+```
+
 ## Appendix: Configuration Layer Processing
+
 We can use sandboxing to illustrate the order in which Gemini CLI processes "configuration layers", since sandboxing is off by default and can alternatively be turned on via `settings.json` files, `.env` files and command-line arguments:
 
 - Create an empty project directory: `mkdir -p ~/junk/myproject`.
