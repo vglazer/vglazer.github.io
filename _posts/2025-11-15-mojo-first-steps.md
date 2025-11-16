@@ -9,7 +9,7 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 ## TL;DR
 
 * Mojo is a new, Python-like JIT-complied programming language from [Chris Lattner](https://en.wikipedia.org/wiki/Chris_Lattner) of LLVM (and Swift) fame.
-* Read this Chris's excellent [series of blog posts](https://www.modular.com/blog/.democratizing-compute-part-1-deepseeks-impact-on-ai) for some background.
+* Read this Chris's excellent [series of blog posts](https://www.modular.com/democratizing-ai-compute) for some background.
 * The basic idea is to have the convenience as ease of use of [Triton](https://openai.com/index/triton/), but supporting non-CUDA backends such as AMD's [ROCm](https://en.wikipedia.org/wiki/ROCm) and Apple's [MPS](https://en.wikipedia.org/wiki/Metal_(API)).
 * Moreover, there should be no performance penalty over hand-optimized kernels.
 * Have a look at the [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started) guide, as well as the [Get Started with GPUs](https://docs.modular.com/mojo/manual/gpu/intro-tutorial) guide.
