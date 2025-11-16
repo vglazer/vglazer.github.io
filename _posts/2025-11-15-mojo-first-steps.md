@@ -25,7 +25,7 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 
 ## First Steps
 
-* Install [Pixi](https://github.com/prefix-dev/pixi): `curl -fsSL https://pixi.sh/install.sh | sh`. Pixi is like [uv](https://docs.astral.sh/uv/), but it lets you use Conda packages.
+* Install [Pixi](https://github.com/prefix-dev/pixi): `brew install pixi` or `curl -fsSL https://pixi.sh/install.sh | sh`. Pixi is like [uv](https://docs.astral.sh/uv/), but it lets you use Conda packages.
 * Clone the [Mojo repo](https://github.com/modular/modular/).
 * cd [`examples/mojo/gpu_functions`](https://github.com/modular/modular/tree/main/examples/mojo/gpu-functions) and run `pixi run mojo mandelbrot.mojo`. This will JIT-compile and run `mandelbrot.mojo`.
 * You can also compile a standalone executable using `pixi run mojo build mandelbrot.mojo` and then run it directly using `./mandelbrot`.
