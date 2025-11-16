@@ -28,7 +28,7 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 * Install [Pixi](https://github.com/prefix-dev/pixi): `brew install pixi` or `curl -fsSL https://pixi.sh/install.sh | sh`. Pixi is like [uv](https://docs.astral.sh/uv/), but it lets you use Conda packages.
 * Clone the [Mojo repo](https://github.com/modular/modular/).
 * cd [`examples/mojo/gpu_functions`](https://github.com/modular/modular/tree/main/examples/mojo/gpu-functions) (there is a `pixi.toml` there that specifies the necessary deps).
-* Use your favorite editor to create a file in that directory called `accelerator.mojo` with the following contents:
+* Use your favorite editor to create a file in that directory called `accelerator.mojo`, with the following contents:
 
 ```python
 from sys import has_accelerator
