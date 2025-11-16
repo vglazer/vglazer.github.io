@@ -6,6 +6,8 @@ permalink: mojo-first-steps
 categories: Metal Mojo MPS ROCm Triton Python GPUs
 ---
 
+![Mojo](/assets/mojo.png)
+
 ## TL;DR
 
 * Mojo is a new, Python-like JIT-complied programming language from [Chris Lattner](https://en.wikipedia.org/wiki/Chris_Lattner) of LLVM (and Swift) fame.
