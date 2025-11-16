@@ -48,4 +48,4 @@ def main():
 * You can also use `mojo` to compile standalone executables, like so: `pixi run mojo build mandelbrot.mojo`. They can then be run directly: `./mandelbrot`.
 * The rest of the examples in `gpu-functions` should also work, with the exception of [reduction.mojo](https://github.com/modular/modular/blob/main/examples/mojo/gpu-functions/reduction.mojo). That one is too NVIDIA-specifc.
 * For a more involved example demonstrating Mojo language constructs such as Lists, structs and modules, as well as Python-interop, `cd examples/mojo/life` and `pixi run mojo run lifev3.mojo` (this is the example from [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started)).
-* You can learn more about calling Python from Mojo and calling Mojo from Python [here](https://docs.modular.com/mojo/manual/python/).
+* For more information about Mojo language basics, see [this page](https://docs.modular.com/mojo/manual/basics). To learn about calling Python from Mojo and calling Mojo from Python see [this page](https://docs.modular.com/mojo/manual/python/).
