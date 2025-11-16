@@ -13,7 +13,7 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 * Mojo is a new, Python-like JIT-complied programming language from [Chris Lattner](https://en.wikipedia.org/wiki/Chris_Lattner) of LLVM (and Swift) fame.
 * Read this Chris's excellent [series of blog posts](https://www.modular.com/democratizing-ai-compute) for some background.
 * The basic idea is to have the convenience as ease of use of [Triton](https://openai.com/index/triton/), but supporting non-CUDA backends such as AMD's [ROCm](https://en.wikipedia.org/wiki/ROCm) and Apple's [Metal](https://en.wikipedia.org/wiki/Metal_(API)). SIMD support is also [excellent](https://docs.modular.com/mojo/stdlib/builtin/simd/SIMD/).
-* Once [Python interop](ttps://docs.modular.com/mojo/manual/python/) becomes [more mature](https://docs.modular.com/mojo/manual/python/mojo-from-python#known-limitations), Mojo should be a good choice for [accelearating performance-critical Python code](https://docs.modular.com/mojo/manual/python/mojo-from-python/#strategies-for-porting-python-to-mojo).
+* Once [Python interop](https://docs.modular.com/mojo/manual/python/) becomes [more mature](https://docs.modular.com/mojo/manual/python/mojo-from-python#known-limitations), Mojo should be a good choice for [accelearating performance-critical Python code](https://docs.modular.com/mojo/manual/python/mojo-from-python/#strategies-for-porting-python-to-mojo).
 * Have a look at [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started) as well as [Get started with GPU programming](https://docs.modular.com/mojo/manual/gpu/intro-tutorial).
 
 ## State Of Metal Support
