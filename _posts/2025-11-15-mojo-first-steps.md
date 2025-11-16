@@ -28,5 +28,3 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 * cd [`examples/mojo/gpu_functions`](https://github.com/modular/modular/tree/main/examples/mojo/gpu-functions) and run `pixi run mojo mandelbrot.mojo`. This will JIT-compile and run `mandelbrot.mojo`.
 * You can also compile a standalone executable using `pixi run mojo build mandelbrot.mojo` and then run it directly using `./mandelbrot`
 * All the other examples should also work, with the exception of [reduction.mojo](https://github.com/modular/modular/blob/main/examples/mojo/gpu-functions/reduction.mojo). That one is too NVIDIA-specifc.
-
-##
