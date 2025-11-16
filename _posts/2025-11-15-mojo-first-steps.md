@@ -27,6 +27,22 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 
 * Install [Pixi](https://github.com/prefix-dev/pixi): `brew install pixi` or `curl -fsSL https://pixi.sh/install.sh | sh`. Pixi is like [uv](https://docs.astral.sh/uv/), but it lets you use Conda packages.
 * Clone the [Mojo repo](https://github.com/modular/modular/).
+* Create a file called accelerator.mojo with the following contents:
+
+```python
+from sys import has_accelerator
+from gpu.host import DeviceContext
+
+def main():
+    @parameter
+    if not has_accelerator():
+        print("No compatible GPU found")
+    else:
+        # Get the context for the attached GPU
+        ctx = DeviceContext()
+        print("Found GPU:", ctx.name())
+```
+* Run `pixi run mojo accelerator.mojo`. On a Mac, this will say something like `Found GPU: Apple M3 Max`. 
 * cd [`examples/mojo/gpu_functions`](https://github.com/modular/modular/tree/main/examples/mojo/gpu-functions) and run `pixi run mojo mandelbrot.mojo`. This will JIT-compile and run `mandelbrot.mojo`.
 * You can also compile a standalone executable using `pixi run mojo build mandelbrot.mojo` and then run it directly using `./mandelbrot`.
 * All the other examples should also work, with the exception of [reduction.mojo](https://github.com/modular/modular/blob/main/examples/mojo/gpu-functions/reduction.mojo). That one is too NVIDIA-specifc.
