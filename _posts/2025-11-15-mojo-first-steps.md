@@ -13,7 +13,7 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 * Mojo is a new, Python-like JIT-complied programming language from [Chris Lattner](https://en.wikipedia.org/wiki/Chris_Lattner) of LLVM (and Swift) fame.
 * Read this Chris's excellent [series of blog posts](https://www.modular.com/democratizing-ai-compute) for some background.
 * The basic idea is to have the convenience as ease of use of [Triton](https://openai.com/index/triton/), but supporting non-CUDA backends such as AMD's [ROCm](https://en.wikipedia.org/wiki/ROCm) and Apple's [Metal](https://en.wikipedia.org/wiki/Metal_(API)). GPUs aside, [SIMD support](https://docs.modular.com/mojo/stdlib/builtin/simd/SIMD/) is also excellent.
-* Once Python interop becomes [more mature](https://docs.modular.com/mojo/manual/python/mojo-from-python#known-limitations), Mojo should be a good choice for [accelearating performance-critical Python code](https://docs.modular.com/mojo/manual/python/mojo-from-python/#strategies-for-porting-python-to-mojo).
+* Once [Python interop](ttps://docs.modular.com/mojo/manual/python/) becomes [more mature](https://docs.modular.com/mojo/manual/python/mojo-from-python#known-limitations), Mojo should be a good choice for [accelearating performance-critical Python code](https://docs.modular.com/mojo/manual/python/mojo-from-python/#strategies-for-porting-python-to-mojo).
 * Have a look at [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started) as well as [Get started with GPU programming](https://docs.modular.com/mojo/manual/gpu/intro-tutorial).
 
 ## State Of Metal Support
@@ -48,4 +48,4 @@ def main():
 * You can also use `mojo` to compile standalone executables, like so: `pixi run mojo build mandelbrot.mojo`. They can then be run directly: `./mandelbrot`.
 * The rest of the examples in `gpu-functions` should also work, with the exception of [reduction.mojo](https://github.com/modular/modular/blob/main/examples/mojo/gpu-functions/reduction.mojo). That one is too NVIDIA-specifc.
 * For a more involved example demonstrating Mojo language constructs such as Lists, structs and modules, as well as Python-interop, `cd examples/mojo/life` and `pixi run mojo run lifev3.mojo` (this is just the example from [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started)).
-* For more information about Mojo language basics, see [this page](https://docs.modular.com/mojo/manual/basics). To learn about [calling Python from Mojo](https://docs.modular.com/mojo/manual/python/python-from-mojo) and [calling Mojo from Python](https://docs.modular.com/mojo/manual/python/mojo-from-python) see [this page](https://docs.modular.com/mojo/manual/python/).
+* For more information about Mojo language basics, see [this page](https://docs.modular.com/mojo/manual/basics).
