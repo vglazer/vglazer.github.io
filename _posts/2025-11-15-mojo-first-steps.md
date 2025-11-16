@@ -12,7 +12,7 @@ categories: Metal Mojo MPS ROCm Triton Python GPUs
 * Read this Chris's excellent [series of blog posts](https://www.modular.com/democratizing-ai-compute) for some background.
 * The basic idea is to have the convenience as ease of use of [Triton](https://openai.com/index/triton/), but supporting non-CUDA backends such as AMD's [ROCm](https://en.wikipedia.org/wiki/ROCm) and Apple's [Metal](https://en.wikipedia.org/wiki/Metal_(API)).
 * Moreover, there should be no performance penalty over hand-optimized kernels.
-* Have a look at the [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started) guide, as well as the [Get Started with GPUs](https://docs.modular.com/mojo/manual/gpu/intro-tutorial) guide.
+* Have a look at [Get started with Mojo](https://docs.modular.com/mojo/manual/get-started) as well as [Get Started with GPUs](https://docs.modular.com/mojo/manual/gpu/intro-tutorial).
 
 ## State Of Metal Support
 
