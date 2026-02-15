@@ -15,3 +15,6 @@ highlighter: rouge
 plugins: [jekyll-gist]
 
 theme: jekyll-theme-tactile
+
+gist:
+  noscript: false
